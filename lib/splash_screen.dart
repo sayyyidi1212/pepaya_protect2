@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patrol_track_mobile/login.dart';
+import 'package:patrol_track_mobile/main_home.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -13,7 +14,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Future.delayed(Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => HomePage()),
       );
     });
   }
