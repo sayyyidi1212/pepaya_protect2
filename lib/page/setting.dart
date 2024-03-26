@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/splash_screen.dart';
 
 class Setting extends StatefulWidget{
   @override
@@ -9,6 +8,17 @@ class Setting extends StatefulWidget{
 class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      color: Color.fromARGB(255, 245, 245, 245),
+      child: Center(
+        child: Text('Setting Page',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }

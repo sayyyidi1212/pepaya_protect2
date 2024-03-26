@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/splash_screen.dart';
 
 class History extends StatefulWidget{
   @override
@@ -9,6 +8,17 @@ class History extends StatefulWidget{
 class _HistoryState extends State<History> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      color: Color.fromARGB(255, 245, 245, 245),
+      child: Center(
+        child: Text('History Page',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
   }
 }
