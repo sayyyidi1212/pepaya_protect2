@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:patrol_track_mobile/routes/route_app.dart';
 import 'package:patrol_track_mobile/splash_screen.dart';
 
 void main() {
@@ -10,13 +12,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Patrol Track',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
       home: SplashScreen(),
+      getPages: RouteApp.pages,
     );
   }
 }

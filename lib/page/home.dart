@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -29,10 +30,9 @@ class _HomeState extends State<Home> {
                       SizedBox(height: 20),
                       Padding(
                         padding: EdgeInsets.only(left: 3, bottom: 3),
-                        child: Text(
-                          "Welcome back!",
-                          style: TextStyle(
-                            fontSize: 20,
+                        child: Text("Welcome Back!",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
                             fontWeight: FontWeight.w400,
                             letterSpacing: 1,
                             wordSpacing: 2,
@@ -42,9 +42,8 @@ class _HomeState extends State<Home> {
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 3, bottom: 25),
-                        child: Text(
-                          "Fanidiya Tasya",
-                          style: TextStyle(
+                        child: Text("Fanidiya Tasya",
+                          style: GoogleFonts.poppins(
                             fontSize: 20,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 1,
@@ -56,7 +55,6 @@ class _HomeState extends State<Home> {
                     ],
                   ),
                 ),
-                // Foto
                 Container(
                   margin: EdgeInsets.only(left: 10),
                   width: 50,
@@ -64,7 +62,7 @@ class _HomeState extends State<Home> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
-                      image: AssetImage('assets/images/logo_patrol.png'), 
+                      image: AssetImage('assets/images/profile.jpeg'),
                       fit: BoxFit.cover,
                     ),
                   ),

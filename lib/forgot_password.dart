@@ -1,7 +1,6 @@
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/login.dart';
-import 'package:patrol_track_mobile/menu_nav.dart';
 
 class ForgotPass extends StatefulWidget {
   @override
@@ -34,16 +33,13 @@ class _ForgotPass extends State<ForgotPass> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Forgot Password",
+                    Text("Forgot Password",
                       style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.w900),
                     ),
-                    // SizedBox(height: 10),
-                    Text(
-                      "Enter your email, we will send a verification code.",
+                    Text("Enter your email, we will send a verification code.",
                       style: GoogleFonts.poppins(
                           color: Color(0xFFABBAC8),
                           fontSize: 18,
@@ -102,13 +98,7 @@ class _ForgotPass extends State<ForgotPass> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuNav()),
-                            );
-                          },
+                          onPressed: () => Get.toNamed('/menu-nav'), 
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF305E8B),
                             minimumSize: Size(double.infinity, 50),
@@ -117,8 +107,7 @@ class _ForgotPass extends State<ForgotPass> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            "Send Code",
+                          child: Text("Send Code",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -131,12 +120,7 @@ class _ForgotPass extends State<ForgotPass> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () {
-                              Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => Login(),
-                                ),
-                              );
-                            },
+                            onTap: () => Get.toNamed('/login'),
                             child: Text("Back to Login",
                               style: GoogleFonts.poppins(color: Colors.grey, fontWeight: FontWeight.w600),
                             ),

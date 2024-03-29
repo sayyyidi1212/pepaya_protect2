@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/menu_nav.dart';
+import 'package:get/get.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -11,10 +11,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MenuNav()),
-      );
+      Get.offNamed('/menu-nav');
     });
   }
 
