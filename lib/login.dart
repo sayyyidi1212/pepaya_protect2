@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/forgot_password.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -42,7 +41,6 @@ class _LoginState extends State<Login> {
                           fontSize: 30,
                           fontWeight: FontWeight.w900),
                     ),
-                    // SizedBox(height: 10),
                     Text(
                       "Let’s log in, to continue!",
                       style: GoogleFonts.poppins(
@@ -132,13 +130,6 @@ class _LoginState extends State<Login> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () => Get.toNamed('/forgot-pass'),
-                            // onTap: () {
-                            //   Get.to(
-                            //     () => ForgotPass(),
-                            //     transition: Transition.fade,
-                            //     duration: Duration(milliseconds: 1000),
-                            //   );
-                            // },
                             child: Text(
                               "Forgot Password?",
                               style: GoogleFonts.poppins(color: Colors.grey),
@@ -159,8 +150,7 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            "Login",
+                          child: Text("Login",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
