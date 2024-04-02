@@ -1,155 +1,142 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-void main() {
-  runApp(LoginApp());
-}
-
-class LoginApp extends StatelessWidget {
+class Login extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Login App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: LoginPage(),
-    );
-  }
+  _LoginState createState() => _LoginState();
 }
 
-class LoginPage extends StatefulWidget {
-  @override
-  _LoginPageState createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+class _LoginState extends State<Login> {
+  TextEditingController _emailController = TextEditingController(); // Deklarasi controller untuk email
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(height: 20.0),
-            Text(
-              'Patrolguard',
-              style: TextStyle(
-                color: Color(0xFF356899), // Warna teks putih
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0), // Jarak antara teks dan teks selanjutnya
-            Text(
-              'Welcome Back 👋',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0), // Jarak antara teks dan teks selanjutnya
-            Text(
-              'Let’s log in., to continue!',
-              style: TextStyle(
-                fontSize: 18,
-                color: Color.fromARGB(255, 113, 120, 128),
-              ),
-            ),
-            SizedBox(height: 50.0),
-            TextFormField(
-              controller: _usernameController,
-              decoration: InputDecoration(
-                labelText: 'Username',
-                border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(10.0)), // Radius 10
-                ),
-              ),
-            ),
-            SizedBox(height: 20.0),
-            TextFormField(
-              controller: _passwordController,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                border: OutlineInputBorder(
-                  borderRadius:
-                      BorderRadius.all(Radius.circular(10.0)), // Radius 10
-                ),
-              ),
-            ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(
-                    0xFF356899), // Ubah warna tombol menjadi kode warna yang diinginkan (356899)
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(5), // Atur radius sudut tombol
-                ),
-              ),
-              onPressed: () {
-                // Replace this with your authentication logic
-                String username = _usernameController.text;
-                String password = _passwordController.text;
-
-                // Example authentication logic
-                if (username == 'admin' && password == 'password') {
-                  // Navigate to home page or any other page
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                } else {
-                  // Show error message or handle authentication failure
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Error'),
-                      content: Text('Invalid username or password.'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('OK'),
-                        ),
-                      ],
+      body: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            colors: [
+              Color(0xFF305E8B),
+              Color(0xFF1E3B57),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 80),
+              Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "Welcome Back",
+                      style: GoogleFonts.poppins(
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
-                  );
-                }
-              },
-              child: Padding(
-                padding: const EdgeInsets.all(15.0),
-                child: Text(
-                  'Login',
-                  style: TextStyle(
-                      color: Colors.white), // Ubah warna teks menjadi putih
+                    Text(
+                      "Let’s log in, to continue!",
+                      style: GoogleFonts.poppins(
+                        color: Color(0xFFABBAC8),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 30),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(60),
+                    topRight: Radius.circular(60),
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.all(20),
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(height: 50.0), // SizedBox sebelum TextFormField untuk email
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Email', // Mengubah label menjadi "Email"
+                          
+                        ),
+                      ),
+                       SizedBox(height: 25.0), // SizedBox sebelum TextFormField untuk email
+                      TextFormField(
+                        controller: _emailController,
+                        decoration: InputDecoration(
+                          labelText: 'Password', // Mengubah label menjadi "Email"
+                          
+                        ),
+                      ),
+
+                       SizedBox(height: 10.0), // Jarak antara teks dan teks selanjutnya
+         Row(
+  mainAxisAlignment: MainAxisAlignment.end,
+  children: [
+    Text(
+      'Forgot Password ?',
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ],
+),
+
+
+                      SizedBox(height: 20), // SizedBox setelah TextFormField untuk email
+                      Container(
+                        margin: EdgeInsets.symmetric(horizontal: 50),
+                        child: ElevatedButton(
+                          onPressed: () => Get.toNamed('/menu-nav'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color(0xFF305E8B),
+                            minimumSize: Size(double.infinity, 50),
+                            padding: EdgeInsets.symmetric(vertical: 15),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          child: Text(
+                            "Login",
+                            style: GoogleFonts.poppins(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Example home page after successful login
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Text('Welcome!'),
-      ),
-    );
-  }
+void main() {
+  runApp(
+    GetMaterialApp(
+      home: Login(), // Changed from Otp() to Login()
+    ),
+  );
 }
