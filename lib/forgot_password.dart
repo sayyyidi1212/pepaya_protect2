@@ -98,7 +98,7 @@ class _ForgotPass extends State<ForgotPass> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
-                          onPressed: () => Get.toNamed('/menu-nav'), 
+                          onPressed: () => Get.toNamed('/otp'), 
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF305E8B),
                             minimumSize: Size(double.infinity, 50),
@@ -120,7 +120,7 @@ class _ForgotPass extends State<ForgotPass> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           GestureDetector(
-                            onTap: () => Get.toNamed('/login'),
+                            onTap: () => Get.back(),
                             child: Text("Back to Login",
                               style: GoogleFonts.poppins(color: Colors.grey, fontWeight: FontWeight.w600),
                             ),
