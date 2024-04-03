@@ -1,14 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/material.dart';
 
-class Login extends StatefulWidget {
+class Otp extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _OtpState createState() => _OtpState();
 }
 
-class _LoginState extends State<Login> {
-  bool _isObscure = true;
+class _OtpState extends State<Otp> {
+  TextEditingController _otpController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -35,18 +35,20 @@ class _LoginState extends State<Login> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "Welcome Back",
+                      "Forgot Password",
                       style: GoogleFonts.poppins(
-                          color: Colors.white,
-                          fontSize: 30,
-                          fontWeight: FontWeight.w900),
+                        color: Colors.white,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w900,
+                      ),
                     ),
                     Text(
-                      "Let’s log in, to continue!",
+                      "Enter your email, we will send a verification code.",
                       style: GoogleFonts.poppins(
-                          color: Color(0xFFABBAC8),
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                        color: Color(0xFFABBAC8),
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -77,71 +79,47 @@ class _LoginState extends State<Login> {
                             ),
                           ],
                         ),
-                        child: Column(
-                          children: <Widget>[
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.grey[200]!),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: List.generate(
+                            6,
+                            (index) => SizedBox(
+                              width: 50,
+                              height: 50,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                    width: 2,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                              ),
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "Email",
-                                  hintStyle:
-                                      GoogleFonts.poppins(color: Colors.grey),
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border(
-                                  bottom: BorderSide(color: Colors.grey[200]!),
-                                ),
-                              ),
-                              child: TextField(
-                                obscureText: _isObscure,
-                                decoration: InputDecoration(
-                                  hintText: "Password",
-                                  hintStyle:
-                                      GoogleFonts.poppins(color: Colors.grey),
-                                  border: InputBorder.none,
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      _isObscure
-                                          ? Icons.visibility
-                                          : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      setState(() {
-                                        _isObscure = !_isObscure;
-                                      });
-                                    },
+                                alignment: Alignment.center,
+                                child: TextField(
+                                  controller: _otpController,
+                                  textAlign: TextAlign.center,
+                                  keyboardType: TextInputType.number,
+                                  maxLength: 1,
+                                  onChanged: (value) {
+                                    if (value.isNotEmpty && index < 5) {
+                                      FocusScope.of(context).nextFocus();
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    counterText: "",
+                                    border: InputBorder.none,
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          GestureDetector(
-                            onTap: () => Get.toNamed('/forgot-pass'),
-                            child: Text(
-                              "Forgot Password?",
-                              style: GoogleFonts.poppins(color: Colors.grey),
-                            ),
                           ),
-                        ],
+                        ),
                       ),
                       SizedBox(height: 20),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
-                          onPressed: () => Get.toNamed('/menu-nav'),
+                          onPressed: () => Get.offNamed('/login'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF305E8B),
                             minimumSize: Size(double.infinity, 50),
@@ -150,14 +128,17 @@ class _LoginState extends State<Login> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text("Login",
+                          child: Text(
+                            "Verify",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
-                              fontWeight: FontWeight.bold,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
                         ),
                       ),
+                      SizedBox(height: 20),
+                     
                     ],
                   ),
                 ),
@@ -168,4 +149,12 @@ class _LoginState extends State<Login> {
       ),
     );
   }
+}
+
+void main() {
+  runApp(
+    GetMaterialApp(
+      home: Otp(),
+    ),
+  );
 }
