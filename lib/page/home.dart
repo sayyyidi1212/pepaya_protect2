@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,12 +10,13 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now();
     return Scaffold(
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
+            decoration: const BoxDecoration(
               color: Color(0xFF356899),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -29,7 +31,7 @@ class _HomeState extends State<Home> {
                     children: [
                       SizedBox(height: 20),
                       Padding(
-                        padding: EdgeInsets.only(left: 3, bottom: 3),
+                        padding: const EdgeInsets.only(left: 3, bottom: 3),
                         child: Text("Welcome Back!",
                           style: GoogleFonts.poppins(
                             fontSize: 14,
@@ -41,7 +43,7 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: 3, bottom: 25),
+                        padding: const EdgeInsets.only(left: 3, bottom: 25),
                         child: Text("Fanidiya Tasya",
                           style: GoogleFonts.poppins(
                             fontSize: 20,
@@ -59,7 +61,7 @@ class _HomeState extends State<Home> {
                   margin: EdgeInsets.only(left: 10),
                   width: 50,
                   height: 50,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     image: DecorationImage(
                       image: AssetImage('assets/images/profile.jpeg'),
@@ -75,14 +77,27 @@ class _HomeState extends State<Home> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 15),
-                  child: Text("Today",
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                  child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Today",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextButton(
+                            child: Text("Apply for permission",
+                              style: GoogleFonts.poppins(
+                                color: Colors.red,
+                              ),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
                 ),
-                SizedBox(height: 10),
+                SizedBox(height: 5),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
@@ -146,7 +161,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () => Get.toNamed('/presensi'),
+                      // onTap: () => Get.toNamed('/presensi'),
                       child: Container(
                         width: 165,
                         height: 134,
@@ -204,6 +219,57 @@ class _HomeState extends State<Home> {
                         ),
                       ),
                     ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      children: [
+                        TableCalendar(
+                          locale: "en_US",
+                          rowHeight: 40,
+                          headerStyle: const HeaderStyle(
+                            formatButtonVisible: false,
+                            titleCentered: true,
+                          ),
+                          focusedDay: today,
+                          firstDay: DateTime.utc(2012),
+                          lastDay: DateTime.utc(2040),
+                          calendarFormat: CalendarFormat.week,
+                          calendarStyle: const CalendarStyle(
+                            todayDecoration: BoxDecoration(
+                              color: Color(0xFF356899),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    // SizedBox (height: 15),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("History Activity",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          TextButton(
+                            child: Text("See all",
+                              style: GoogleFonts.poppins(
+                                color: Colors.blue,
+                              ),
+                            ),
+                            onPressed: () {},
+                          ),
+                        ],
+                      ),
+                    ),
+                    
                   ],
                 ),
               ],
