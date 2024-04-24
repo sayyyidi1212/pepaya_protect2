@@ -10,6 +10,7 @@ class RouteApp {
     GetPage(name: '/login', page: () => Login()),
     GetPage(name: '/forgot-pass', page: () => ForgotPass()),
     GetPage(name: '/otp', page: () => Otp()),
+    
     GetPage(name: '/menu-nav', page: () => MenuNav()),
     GetPage(name: '/presensi', page: () => Presensi()),
   ];
