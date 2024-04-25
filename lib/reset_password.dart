@@ -8,15 +8,15 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _otpController = TextEditingController();
+  bool _isObscurePassword = true;
+  bool _isObscureConfirmPassword = true;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
@@ -56,7 +56,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               ),
               SizedBox(height: 30),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(60),
@@ -67,32 +67,90 @@ class _ResetPasswordState extends State<ResetPassword> {
                   padding: EdgeInsets.all(20),
                   child: Column(
                     children: <Widget>[
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _emailController,
-                     
-                        decoration: InputDecoration(
-                          labelText: 'New Password',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      SizedBox(height: 20),
-                      TextFormField(
-                        controller: _otpController,
-                  
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          labelText: 'Confirm Password',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      SizedBox(height: 20),
                       Container(
                         padding: EdgeInsets.all(20),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(225, 255, 255, .3),
+                              blurRadius: 20,
+                              offset: Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: <Widget>[
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.grey[200]!),
+                                ),
+                              ),
+                              child: TextField(
+                                obscureText: _isObscurePassword,
+                                decoration: InputDecoration(
+                                  hintText: "Password",
+                                  hintStyle: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isObscurePassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscurePassword =
+                                            !_isObscurePassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(color: Colors.grey[200]!),
+                                ),
+                              ),
+                              child: TextField(
+                                obscureText: _isObscureConfirmPassword,
+                                decoration: InputDecoration(
+                                  hintText: "Confirm Password",
+                                  hintStyle: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                  ),
+                                  border: InputBorder.none,
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      _isObscureConfirmPassword
+                                          ? Icons.visibility
+                                          : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _isObscureConfirmPassword =
+                                            !_isObscureConfirmPassword;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(225, 255, 255, .3),
                               blurRadius: 20,
@@ -101,18 +159,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
                       Container(
-                        margin: EdgeInsets.symmetric(horizontal: 50),
+                        margin: const EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
                           onPressed: () {
-                            // Simulasi reset password
-                            // Anda bisa menambahkan logika reset password sesuai kebutuhan aplikasi Anda di sini
-                            Get.snackbar(
-                                'Reset Password', 'Password reset berhasil!',
-                                backgroundColor: Colors.green,
-                                colorText: Colors.white,
-                                snackPosition: SnackPosition.BOTTOM);
+                            Get.offNamed('/login');
+                            // Get.snackbar(
+                            //     'Reset Password', 'Password reset berhasil!',
+                            //     backgroundColor: Colors.green,
+                            //     colorText: Colors.white,
+                            //     snackPosition: SnackPosition.BOTTOM);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF305E8B),
@@ -131,7 +187,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -142,12 +197,4 @@ class _ResetPasswordState extends State<ResetPassword> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(
-    GetMaterialApp(
-      home: ResetPassword(),
-    ),
-  );
 }

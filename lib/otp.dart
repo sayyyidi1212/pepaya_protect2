@@ -119,7 +119,7 @@ class _OtpState extends State<Otp> {
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(
-                          onPressed: () => Get.offNamed('/login'),
+                          onPressed: () => Get.toNamed('/reset-pass'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xFF305E8B),
                             minimumSize: Size(double.infinity, 50),
