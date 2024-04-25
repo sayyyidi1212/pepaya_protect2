@@ -15,7 +15,7 @@ class _LoginState extends State<Login> {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
@@ -34,15 +34,13 @@ class _LoginState extends State<Login> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Welcome Back",
+                    Text("Welcome Back",
                       style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 30,
                           fontWeight: FontWeight.w900),
                     ),
-                    Text(
-                      "Let’s log in, to continue!",
+                    Text("Let’s log in, to continue!",
                       style: GoogleFonts.poppins(
                           color: Color(0xFFABBAC8),
                           fontSize: 18,
@@ -53,7 +51,7 @@ class _LoginState extends State<Login> {
               ),
               SizedBox(height: 30),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(60),
@@ -69,7 +67,7 @@ class _LoginState extends State<Login> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(225, 255, 255, .3),
                               blurRadius: 20,
@@ -130,8 +128,7 @@ class _LoginState extends State<Login> {
                         children: <Widget>[
                           GestureDetector(
                             onTap: () => Get.toNamed('/forgot-pass'),
-                            child: Text(
-                              "Forgot Password?",
+                            child: Text("Forgot Password?",
                               style: GoogleFonts.poppins(color: Colors.grey),
                             ),
                           ),

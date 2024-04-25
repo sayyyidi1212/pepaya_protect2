@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Schedule extends StatelessWidget {
@@ -19,8 +18,8 @@ class Schedule extends StatelessWidget {
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
+            decoration: const BoxDecoration(
               color: Color(0xFF356899),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -29,17 +28,11 @@ class Schedule extends StatelessWidget {
             ),
             child: Row(
               children: [
-                IconButton(
-                icon: Icon(Icons.arrow_back),
-                onPressed: () {
-                  Get.back(); // Kembali ke tampilan sebelumnya
-                },
-                color: Colors.white,
+                Container(
+                  padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
                 ),
-
                 SizedBox(width: 10),
-                Text(
-                  "Jadwal",
+                Text("Jadwal",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -88,20 +81,18 @@ class DaySchedule extends StatelessWidget {
             Text(
               day,
               style: GoogleFonts.poppins(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
               ),
             ),
             SizedBox(height: 5),
             Row(
               children: [
-                Text(
-                  'Jam: ',
-                  style: GoogleFonts.poppins(fontSize: 14),
+                Text("Jam: ",
+                  style: GoogleFonts.poppins(fontSize: 13),
                 ),
-                Text(
-                  '${times.first} - ${times.last}',
-                  style: GoogleFonts.poppins(fontSize: 14),
+                Text("${times.first} - ${times.last}",
+                  style: GoogleFonts.poppins(fontSize: 13),
                 ),
               ],
             ),

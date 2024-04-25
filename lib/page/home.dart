@@ -192,7 +192,7 @@ class _HomeState extends State<Home> {
                                     borderRadius: BorderRadius.circular(10),
                                     color: Color(0xFF3085FE).withOpacity(0.1),
                                   ),
-                                  // child: Icon(FontAwesomeIcons.signOut),
+                                  child: const Icon(FontAwesomeIcons.signOut),
                                 ),
                                 SizedBox(width: 5),
                                 Text("Check Out",
