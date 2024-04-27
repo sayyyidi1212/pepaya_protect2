@@ -35,20 +35,18 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Reset Password",
+                    Text("Reset Password",
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 30,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    Text(
-                      "Enter your email and verification code to reset your password.",
+                    Text("Enter your email and verification code to reset your password.",
                       style: GoogleFonts.poppins(
                         color: Color(0xFFABBAC8),
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -88,12 +86,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   bottom: BorderSide(color: Colors.grey[200]!),
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
                                 obscureText: _isObscurePassword,
                                 decoration: InputDecoration(
-                                  hintText: "Password",
-                                  hintStyle: GoogleFonts.poppins(
+                                  labelText: "Password",
+                                  labelStyle: GoogleFonts.poppins(
                                     color: Colors.grey,
+                                    fontSize: 14,
                                   ),
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(
@@ -118,12 +117,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   bottom: BorderSide(color: Colors.grey[200]!),
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
                                 obscureText: _isObscureConfirmPassword,
                                 decoration: InputDecoration(
-                                  hintText: "Confirm Password",
-                                  hintStyle: GoogleFonts.poppins(
+                                  labelText: "Confirm Password",
+                                  labelStyle: GoogleFonts.poppins(
                                     color: Colors.grey,
+                                    fontSize: 14,
                                   ),
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(

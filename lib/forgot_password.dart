@@ -14,7 +14,7 @@ class _ForgotPass extends State<ForgotPass> {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
@@ -37,20 +37,20 @@ class _ForgotPass extends State<ForgotPass> {
                       style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 30,
-                          fontWeight: FontWeight.w900),
+                          fontWeight: FontWeight.w800),
                     ),
                     Text("Enter your email, we will send a verification code.",
                       style: GoogleFonts.poppins(
                           color: Color(0xFFABBAC8),
                           fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: 30),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(60),
@@ -66,7 +66,7 @@ class _ForgotPass extends State<ForgotPass> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(225, 255, 255, .3),
                               blurRadius: 20,
@@ -85,8 +85,10 @@ class _ForgotPass extends State<ForgotPass> {
                               child: TextFormField(
                                 decoration: InputDecoration(
                                   labelText: "Email",
-                                  labelStyle:
-                                      GoogleFonts.poppins(color: Colors.grey),
+                                  labelStyle: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -94,7 +96,7 @@ class _ForgotPass extends State<ForgotPass> {
                           ],
                         ),
                       ),
-                      SizedBox(height: 20),
+                      SizedBox(height: 15),
                       Container(
                         margin: EdgeInsets.symmetric(horizontal: 50),
                         child: ElevatedButton(

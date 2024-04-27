@@ -38,13 +38,13 @@ class _LoginState extends State<Login> {
                       style: GoogleFonts.poppins(
                           color: Colors.white,
                           fontSize: 30,
-                          fontWeight: FontWeight.w900),
+                          fontWeight: FontWeight.w800),
                     ),
                     Text("Let’s log in, to continue!",
                       style: GoogleFonts.poppins(
                           color: Color(0xFFABBAC8),
                           fontSize: 18,
-                          fontWeight: FontWeight.w600),
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
@@ -83,11 +83,13 @@ class _LoginState extends State<Login> {
                                   bottom: BorderSide(color: Colors.grey[200]!),
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
                                 decoration: InputDecoration(
-                                  hintText: "Email",
-                                  hintStyle:
-                                      GoogleFonts.poppins(color: Colors.grey),
+                                  labelText: "Email",
+                                  labelStyle: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                  ),
                                   border: InputBorder.none,
                                 ),
                               ),
@@ -98,12 +100,14 @@ class _LoginState extends State<Login> {
                                   bottom: BorderSide(color: Colors.grey[200]!),
                                 ),
                               ),
-                              child: TextField(
+                              child: TextFormField(
                                 obscureText: _isObscure,
                                 decoration: InputDecoration(
-                                  hintText: "Password",
-                                  hintStyle:
-                                      GoogleFonts.poppins(color: Colors.grey),
+                                  labelText: "Password",
+                                  labelStyle: GoogleFonts.poppins(
+                                    color: Colors.grey, 
+                                    fontSize: 14,
+                                  ),
                                   border: InputBorder.none,
                                   suffixIcon: IconButton(
                                     icon: Icon(
