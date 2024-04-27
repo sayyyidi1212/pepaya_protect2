@@ -8,14 +8,14 @@ class Otp extends StatefulWidget {
 }
 
 class _OtpState extends State<Otp> {
-  TextEditingController _otpController = TextEditingController();
+  List<TextEditingController> _otpControllers = List.generate(6, (index) => TextEditingController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             colors: [
@@ -34,20 +34,18 @@ class _OtpState extends State<Otp> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(
-                      "Forgot Password",
+                    Text("Verify Code",
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 30,
-                        fontWeight: FontWeight.w900,
+                        fontWeight: FontWeight.w800,
                       ),
                     ),
-                    Text(
-                      "Enter your email, we will send a verification code.",
+                    Text("Enter your verification  code from your email that we’ve sent.",
                       style: GoogleFonts.poppins(
                         color: Color(0xFFABBAC8),
                         fontSize: 18,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ],
@@ -55,7 +53,7 @@ class _OtpState extends State<Otp> {
               ),
               SizedBox(height: 30),
               Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(60),
@@ -71,7 +69,7 @@ class _OtpState extends State<Otp> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
+                          boxShadow: const [
                             BoxShadow(
                               color: Color.fromRGBO(225, 255, 255, .3),
                               blurRadius: 20,
@@ -96,16 +94,18 @@ class _OtpState extends State<Otp> {
                                 ),
                                 alignment: Alignment.center,
                                 child: TextField(
-                                  controller: _otpController,
+                                  controller: _otpControllers[index],
                                   textAlign: TextAlign.center,
                                   keyboardType: TextInputType.number,
                                   maxLength: 1,
                                   onChanged: (value) {
                                     if (value.isNotEmpty && index < 5) {
                                       FocusScope.of(context).nextFocus();
+                                    } else if (value.isEmpty && index > 0) {
+                                      FocusScope.of(context).previousFocus();
                                     }
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                     counterText: "",
                                     border: InputBorder.none,
                                   ),
@@ -128,8 +128,7 @@ class _OtpState extends State<Otp> {
                               borderRadius: BorderRadius.circular(10),
                             ),
                           ),
-                          child: Text(
-                            "Verify",
+                          child: Text("Verify",
                             style: GoogleFonts.poppins(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
@@ -137,8 +136,6 @@ class _OtpState extends State<Otp> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                     
                     ],
                   ),
                 ),
@@ -149,12 +146,4 @@ class _OtpState extends State<Otp> {
       ),
     );
   }
-}
-
-void main() {
-  runApp(
-    GetMaterialApp(
-      home: Otp(),
-    ),
-  );
 }
