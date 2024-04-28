@@ -32,7 +32,8 @@ class Schedule extends StatelessWidget {
                   padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
                 ),
                 SizedBox(width: 10),
-                Text("Jadwal",
+                Text(
+                  "Jadwal",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -78,20 +79,31 @@ class DaySchedule extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              day,
-              style: GoogleFonts.poppins(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            Row(
+              children: [
+                Icon(
+                  Icons.date_range_sharp, // Icon tanggal
+                  color: Colors.black,
+                ),
+                SizedBox(width: 8),
+                Text(
+                  day, // Menampilkan nama hari
+                  style: GoogleFonts.poppins(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ),
             SizedBox(height: 5),
             Row(
               children: [
-                Text("Jam: ",
+                Text(
+                  "Jam: ",
                   style: GoogleFonts.poppins(fontSize: 13),
                 ),
-                Text("${times.first} - ${times.last}",
+                Text(
+                  "${times.first} - ${times.last}",
                   style: GoogleFonts.poppins(fontSize: 13),
                 ),
               ],

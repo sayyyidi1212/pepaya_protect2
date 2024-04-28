@@ -143,7 +143,7 @@ class _SettingState extends State<Setting> {
                   left: MediaQuery.of(context).size.width / 2 - 175,
                   child: InkWell(
                     onTap: () {
-                      // Tambahkan logika navigasi sesuai kebutuhan
+                      Get.toNamed('/help-center');
                     },
                     child: Container(
                       width: 350,
