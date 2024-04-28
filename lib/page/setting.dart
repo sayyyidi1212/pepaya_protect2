@@ -187,7 +187,29 @@ class _SettingState extends State<Setting> {
                   left: MediaQuery.of(context).size.width / 2 - 175,
                   child: InkWell(
                     onTap: () {
-                      // Tambahkan logika navigasi sesuai kebutuhan
+                      showDialog(
+                        context: context,
+                          builder: (BuildContext context) {
+                        return AlertDialog(
+                            title: Text("Konfirmasi Logout"),
+                            content: Text("Apakah Anda yakin ingin keluar?"),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop(); // Tutup dialog
+                                },
+                                child: Text("Tidak"),
+                                ),
+                            TextButton(
+                              onPressed: () {
+                              Get.offAllNamed('/login'); // Navigasi ke halaman login
+                              },
+                              child: Text("Ya"),
+                              ),
+                              ],
+                            );
+                          },
+                        );
                     },
                     child: Container(
                       width: 350,
