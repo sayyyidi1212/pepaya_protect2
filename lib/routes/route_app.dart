@@ -4,6 +4,7 @@ import 'package:patrol_track_mobile/login.dart';
 import 'package:patrol_track_mobile/menu_nav.dart';
 import 'package:patrol_track_mobile/otp.dart';
 import 'package:patrol_track_mobile/page/presensi.dart';
+import 'package:patrol_track_mobile/page/scanner.dart';
 import 'package:patrol_track_mobile/reset_password.dart';
 
 class RouteApp {
@@ -15,5 +16,6 @@ class RouteApp {
     
     GetPage(name: '/menu-nav', page: () => MenuNav()),
     GetPage(name: '/presensi', page: () => Presensi()),
+    GetPage(name: '/scanner', page: () => Scanner()),
   ];
 }
