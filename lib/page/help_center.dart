@@ -12,6 +12,7 @@ class _HelpCenterState extends State<HelpCenter> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        
         children: [
           Container(
             padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
