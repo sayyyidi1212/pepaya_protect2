@@ -18,12 +18,11 @@ class RouteApp {
     
     GetPage(name: '/menu-nav', page: () => MenuNav()),
     GetPage(name: '/presensi', page: () => Presensi()),
-<<<<<<< HEAD
+    
     GetPage(name: '/help-center', page: () => HelpCenter()),
     GetPage(name: '/permission', page: () => Permission()),
-=======
+
     GetPage(name: '/scanner', page: () => Scanner()),
     GetPage(name: '/help-center', page: () => HelpCenter())
->>>>>>> 72cd12d67fd52b25e7db94cf6af4f99059cfaecd
   ];
 }

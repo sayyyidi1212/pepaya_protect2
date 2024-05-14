@@ -49,15 +49,15 @@ class _SettingState extends State<Setting> {
               ],
             ),
           ),
-          SizedBox(height: 70),
+          SizedBox(height: 50),
           Expanded(
             child: Stack(
               children: [
                 Align(
                   alignment: Alignment.topCenter,
                   child: Container(
-                    width: 120,
-                    height: 120,
+                    width: 110,
+                    height: 110,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       image: DecorationImage(
@@ -68,7 +68,7 @@ class _SettingState extends State<Setting> {
                   ),
                 ),
                 Positioned(
-                  top: 140,
+                  top: 125,
                   left: MediaQuery.of(context).size.width / 2 - 75,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -93,53 +93,33 @@ class _SettingState extends State<Setting> {
                     ],
                   ),
                 ),
+                
+              //  Positioned(
+              //     top: 220,
+              //     left: MediaQuery.of(context).size.width / 2 - 170,
+              //     child: Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Expanded(flex: 3, child: Text(title, style: Theme.of(context.textTheme.bodySmall, overflow: TextOverflow.ellipsis)))
+              //         Expanded(
+              //           flex: 5
+              //           child: Text(value, style: ,),,
+              //         )
+              //         Text(
+              //           "Nama Lengkap",
+              //           style: GoogleFonts.poppins(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.normal,
+              //             color: Colors.black,
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+                
+               
                 Positioned(
-                  top: 220,
-                  left: MediaQuery.of(context).size.width / 2 - 175,
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed('/forgot-pass');
-                    },
-                    child: Container(
-                      width: 350,
-                      height: 50,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Icon(
-                            Icons.lock_open,
-                            color: Colors.black,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Ubah Password",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 290,
+                  top: 330,
                   left: MediaQuery.of(context).size.width / 2 - 175,
                   child: InkWell(
                     onTap: () {
@@ -183,7 +163,7 @@ class _SettingState extends State<Setting> {
                   ),
                 ),
                 Positioned(
-                  top: 360,
+                  top: 400,
                   left: MediaQuery.of(context).size.width / 2 - 175,
                   child: InkWell(
                     onTap: () {
