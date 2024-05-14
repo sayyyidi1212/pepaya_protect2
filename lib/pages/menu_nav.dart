@@ -15,7 +15,7 @@ class _MenuNavState extends State<MenuNav> {
   int currentTab = 0;
   final List<Widget> screens = [
     Home(),
-    Schedule(),
+    SchedulePage(),
     History(),
     Setting(),
   ];

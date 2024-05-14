@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patrol_track_mobile/core/models/schedule.dart';
+import 'package:patrol_track_mobile/core/services/schedule_service.dart';
 
-class Schedule extends StatelessWidget {
-  final List<Map<String, List<String>>> schedule = [
-    {"Senin": ["08:00", "10:00", "13:00"]},
-    {"Selasa": ["09:00", "11:00", "14:00"]},
-    {"Rabu": ["08:30", "10:30", "13:30"]},
-    {"Kamis": ["09:30", "11:30", "14:30"]},
-    {"Jumat": ["08:45", "10:45", "13:45"]},
-    {"Sabtu": ["10:00", "12:00", "15:00"]},
-    {"Minggu": ["10:30", "12:30", "15:30"]},
-  ];
+class SchedulePage extends StatefulWidget {
+  const SchedulePage({Key? key}) : super(key: key);
+
+  @override
+  _ScheduleState createState() => _ScheduleState();
+}
+
+class _ScheduleState extends State<SchedulePage> {
+  List<Schedule> schedules = [];
+  bool isLoading = true;
+
+  void fetchSchedules() async {
+    try {
+      final result = await ScheduleService.fetchSchedules();
+      setState(() {
+        schedules = result;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    fetchSchedules();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +50,8 @@ class Schedule extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
-                  padding: EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-                ),
                 SizedBox(width: 10),
-                Text(
-                  "Jadwal",
+                Text("Jadwal",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -44,13 +62,13 @@ class Schedule extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: schedule.length,
+            child: isLoading
+            ? Center(child: CircularProgressIndicator())
+            : ListView.builder(
+              itemCount: schedules.length,
               itemBuilder: (context, index) {
-                final daySchedule = schedule[index];
-                final day = daySchedule.keys.first;
-                final times = daySchedule.values.first;
-                return DaySchedule(day, times);
+                final schedule = schedules[index];
+                return DaySchedule(schedule);
               },
             ),
           ),
@@ -61,10 +79,9 @@ class Schedule extends StatelessWidget {
 }
 
 class DaySchedule extends StatelessWidget {
-  final String day;
-  final List<String> times;
+  final Schedule schedule;
 
-  DaySchedule(this.day, this.times);
+  DaySchedule(this.schedule);
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +99,11 @@ class DaySchedule extends StatelessWidget {
             Row(
               children: [
                 Icon(
-                  Icons.date_range_sharp, // Icon tanggal
+                  Icons.date_range_sharp,
                   color: Colors.black,
                 ),
                 SizedBox(width: 8),
-                Text(
-                  day, // Menampilkan nama hari
+                Text("${schedule.day}",
                   style: GoogleFonts.poppins(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
@@ -98,12 +114,11 @@ class DaySchedule extends StatelessWidget {
             SizedBox(height: 5),
             Row(
               children: [
-                Text(
-                  "Jam: ",
+                Text("Jam: ",
                   style: GoogleFonts.poppins(fontSize: 13),
                 ),
                 Text(
-                  "${times.first} - ${times.last}",
+                  "${schedule.startTime} - ${schedule.endTime}",
                   style: GoogleFonts.poppins(fontSize: 13),
                 ),
               ],
