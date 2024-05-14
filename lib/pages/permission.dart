@@ -10,8 +10,6 @@ class Permission extends StatefulWidget {
 
 class _PermissionState extends State<Permission> {
   late DateTime _selectedDate;
-  // String _selectedItem = 'Pilih Izin';
-  // List<String> _dropdownItems = ['Sakit', 'Acara Keluarga', 'Tukar Shift', 'Lainnya'];
 
   @override
   void initState() {
@@ -42,7 +40,7 @@ class _PermissionState extends State<Permission> {
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd-MMMM-yyyy').format(_selectedDate);
+    String formattedDate = DateFormat('dd MMMM yyyy').format(_selectedDate);
 
     return Scaffold(
       body: Column(
@@ -50,7 +48,6 @@ class _PermissionState extends State<Permission> {
           _buildAppBar(),
           _buildDateSelector(formattedDate),
           _buildPermissionType(),
-          // Tambahkan widget-form Anda di sini
         ],
       ),
     );
@@ -74,14 +71,13 @@ class _PermissionState extends State<Permission> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(Icons.arrow_back),
+            icon: const Icon(Icons.arrow_back),
             onPressed: () => Get.back(),
             color: Colors.white,
           ),
           Padding(
             padding: EdgeInsets.only(left: 40, bottom: 5),
-            child: Text(
-              "Form Izin",
+            child: Text("Form Izin",
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -91,7 +87,6 @@ class _PermissionState extends State<Permission> {
               ),
             ),
           ),
-          Spacer(),
         ],
       ),
     );
@@ -99,12 +94,12 @@ class _PermissionState extends State<Permission> {
 
   Widget _buildDateSelector(String formattedDate) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(190.0, 40.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(230.0, 30.0, 0.0, 0.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 185,
+            width: 150,
             height: 40,
             decoration: BoxDecoration(
               color: Colors.white,
@@ -117,19 +112,16 @@ class _PermissionState extends State<Permission> {
                 ),
               ],
             ),
-            padding: const EdgeInsets.all(0.5),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 IconButton(
-                  icon: Icon(Icons.calendar_month_outlined),
+                  icon: const Icon(Icons.calendar_month_outlined),
                   onPressed: () => _selectDate(context),
                   color: Colors.blue.shade900,
                 ),
-                SizedBox(width: 2),
-                Text(
-                  formattedDate,
-                  style: GoogleFonts.poppins(fontSize: 12),
+                Text(formattedDate,
+                  style: GoogleFonts.poppins(fontSize: 13),
                 ),
               ],
             ),
@@ -138,54 +130,55 @@ class _PermissionState extends State<Permission> {
       ),
     );
   }
+  
   Widget _buildPermissionType() {
   List<String> permissionTypes = ['Pilih Jenis Izin', 'Sakit', 'Kepentingan Pribadi', 'Cuti', 'Lainnya']; 
-  String selectedPermissionType = permissionTypes[0]; 
+  String selectedPermissionType = 'Pilih Jenis Izin'; 
 
-  return SingleChildScrollView(
-    child: Container(
+  return Container(
       padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Jenis Izin",
+          Text("Jenis Izin",
             style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 10), 
-          DropdownButtonFormField<String>(
-            value: selectedPermissionType,
-            onChanged: (String? newValue) {
-              if (newValue != null) {
-                setState(() {
-                  selectedPermissionType = newValue;
-                });
-              }
-            },
-            items: permissionTypes.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value),
-              );
-            }).toList(),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(), 
-            ),
+          SizedBox(height: 10),
+          Stack(
+            children: [
+              DropdownButtonFormField<String>(
+                value: selectedPermissionType,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedPermissionType = newValue!;
+                  });
+                },
+                items: permissionTypes.map((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value, style: GoogleFonts.poppins(fontSize: 12)),
+                  );
+                }).toList(),
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 20), 
-          Text(
-            "Deskripsi",
+          Text("Deskripsi",
             style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: 10), 
           TextFormField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               border: OutlineInputBorder(),
             ),
             maxLines: 3, 
@@ -203,7 +196,7 @@ class _PermissionState extends State<Permission> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text("Kirim",
+              child: Text( "Kirim",
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -211,10 +204,9 @@ class _PermissionState extends State<Permission> {
               ),
             ),
           ),
-          SizedBox(height: MediaQuery.of(context).viewInsets.bottom),
         ],
       ),
-    ),
   );
 }
+
 }

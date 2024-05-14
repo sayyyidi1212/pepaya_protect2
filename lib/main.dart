@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patrol_track_mobile/pages/splash_screen.dart';
 import 'package:patrol_track_mobile/routes/route_app.dart';
-import 'package:patrol_track_mobile/splash_screen.dart';
 import 'package:intl/date_symbol_data_local.dart';
 void main() {
   initializeDateFormatting("id_ID", null);
