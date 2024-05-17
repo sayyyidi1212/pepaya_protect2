@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'background.dart';
+import 'package:http/http.dart' as http;
+import 'package:quickalert/quickalert.dart';
 
 class Login extends StatefulWidget {
   final String title;
@@ -19,6 +23,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool _isObscure = true;
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,8 @@ class _LoginState extends State<Login> {
                         bottom: BorderSide(color: Colors.grey[200]!),
                       ),
                     ),
-                    child: TextFormField(
+                    child: TextField(
+                      controller: email,
                       decoration: InputDecoration(
                         labelText: "Email",
                         labelStyle: GoogleFonts.poppins(
@@ -66,7 +73,8 @@ class _LoginState extends State<Login> {
                         bottom: BorderSide(color: Colors.grey[200]!),
                       ),
                     ),
-                    child: TextFormField(
+                    child: TextField(
+                      controller: password,
                       obscureText: _isObscure,
                       decoration: InputDecoration(
                         labelText: "Password",
@@ -77,7 +85,9 @@ class _LoginState extends State<Login> {
                         border: InputBorder.none,
                         suffixIcon: IconButton(
                           icon: Icon(
-                            _isObscure ? Icons.visibility : Icons.visibility_off,
+                            _isObscure
+                                ? Icons.visibility
+                                : Icons.visibility_off,
                           ),
                           onPressed: () {
                             setState(() {
@@ -107,7 +117,35 @@ class _LoginState extends State<Login> {
             Container(
               margin: EdgeInsets.symmetric(horizontal: 50),
               child: ElevatedButton(
-                onPressed: () => Get.toNamed('/menu-nav'),
+                onPressed: () async {
+                  try {
+                    final Map<String, dynamic> requestBody = {
+                      'email': email.text,
+                      'password': password.text,
+                    };
+                    final response = await http.post(
+                        Uri.parse("http://10.0.2.2:8000/api/login"),
+                        headers: <String, String>{
+                          'Content-Type': 'application/json; charset=UTF-8',
+                        },
+                        body: jsonEncode(requestBody));
+
+                    if (response.statusCode == 200) {
+                      Get.toNamed('/menu-nav');
+                    } else {
+                      Map<String,dynamic> data = json.decode(response.body) as Map<String,dynamic>;
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.error,
+                        title: 'Gagal',
+                        text: data['error'],
+                      );
+                    }
+                  } catch (er) {
+                    print(er);
+                  }
+                  //
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF305E8B),
                   minimumSize: Size(double.infinity, 50),
