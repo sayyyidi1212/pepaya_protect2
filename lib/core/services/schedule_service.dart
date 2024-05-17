@@ -8,6 +8,9 @@ class ScheduleService {
   static Future<List<Schedule>> fetchSchedules() async {
     try {
       final response = await http.get(Uri.parse('${Constant.BASE_URL}/schedule/2'));
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
+
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         List<Schedule> schedules = List<Schedule>.from(
@@ -20,6 +23,7 @@ class ScheduleService {
         throw Exception('Failed to load schedules');
       }
     } catch (e) {
+      print('Error: $e');
       throw Exception(e.toString());
     }
   }

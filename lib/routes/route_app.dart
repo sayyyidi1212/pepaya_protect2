@@ -20,7 +20,8 @@ class RouteApp {
     GetPage(name: '/presensi', page: () => Presensi()),
 
     GetPage(name: '/scanner', page: () => Scanner()),
-    GetPage(name: '/help-center', page: () => HelpCenter())
+    GetPage(name: '/help-center', page: () => HelpCenter()),
+    GetPage(name: '/permission', page: () => Permission())
 
   ];
 }
