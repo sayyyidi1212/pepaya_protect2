@@ -6,8 +6,8 @@ import 'package:patrol_track_mobile/pages/auth/reset_password.dart';
 import 'package:patrol_track_mobile/pages/menu_nav.dart';
 import 'package:patrol_track_mobile/pages/help_center.dart';
 import 'package:patrol_track_mobile/pages/permission.dart';
+import 'package:patrol_track_mobile/pages/presence/scanner.dart';
 import 'package:patrol_track_mobile/pages/presensi.dart';
-import 'package:patrol_track_mobile/pages/scanner.dart';
 
 class RouteApp {
   static final pages = [
