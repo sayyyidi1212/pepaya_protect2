@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:patrol_track_mobile/pages/presence/presence.dart';
+import 'package:patrol_track_mobile/pages/report/report.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Scanner extends StatefulWidget {
@@ -84,7 +84,7 @@ class _ScannerState extends State<Scanner> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (context) => Presence(scanData: barcode.code ?? 'No data found'),
+          builder: (context) => Report(scanData: barcode.code ?? 'No data found'),
         ),
       );
     });

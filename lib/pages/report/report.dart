@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class Presence extends StatelessWidget {
+class Report extends StatelessWidget {
   final String scanData;
 
-  Presence({required this.scanData});
+  Report({required this.scanData});
 
   @override
   Widget build(BuildContext context) {
