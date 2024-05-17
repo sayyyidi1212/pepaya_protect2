@@ -50,7 +50,9 @@ class _ScheduleState extends State<SchedulePage> {
             ),
             child: Row(
               children: [
-                SizedBox(width: 10),
+                Container(
+                  padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
+                ),
                 Text("Jadwal",
                   style: GoogleFonts.poppins(
                     fontSize: 20,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patrol_track_mobile/pages/report/report.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class Scanner extends StatefulWidget {
@@ -75,15 +76,17 @@ class _ScannerState extends State<Scanner> {
       ),
     );
   }
+
   void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      _controller = controller;
-    });
-    controller.scannedDataStream.listen((val) {
-      if (mounted && _controller != null) {
-        _controller!.dispose();
-        Navigator.pop(context, val.code);
-      }
+    this._controller = controller;
+    controller.scannedDataStream.listen((Barcode barcode) async {
+      await controller.pauseCamera();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Report(scanData: barcode.code ?? 'No data found'),
+        ),
+      );
     });
   }
 
