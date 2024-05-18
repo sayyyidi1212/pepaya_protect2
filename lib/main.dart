@@ -4,6 +4,7 @@ import 'package:patrol_track_mobile/pages/splash_screen.dart';
 import 'package:patrol_track_mobile/routes/route_app.dart';
 import 'package:intl/date_symbol_data_local.dart';
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting("id_ID", null);
   runApp(const MyApp());
 }
