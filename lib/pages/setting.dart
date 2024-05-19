@@ -1,6 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:patrol_track_mobile/baseUrl.dart';
+import 'package:patrol_track_mobile/core/controllers/getToken.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -8,19 +12,54 @@ class Setting extends StatefulWidget {
 }
 
 class _SettingState extends State<Setting> {
+  DateTime today = DateTime.now();
+  Map<String, dynamic> biodata = {};
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController birthDateController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+
+  Future<Map<String, dynamic>> getBiodata() async {
+    try {
+      final token = await getToken();
+
+      final response = await http.get(
+        Uri.parse('${BaseUrl}/api/get-user'),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': token.toString(),
+        },
+      );
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = json.decode(response.body) as Map<String, dynamic>;
+        return data;
+      } else {
+        throw Exception('Failed to load biodata');
+      }
+    } catch (er) {
+      print('error $er');
+      return {};
+    }
+  }
+
+  void setTextFieldData(Map<String, dynamic> biodata) {
+    nameController.text = biodata['name'] ?? 'N/A';
+    emailController.text = biodata['email'] ?? 'N/A';
+    birthDateController.text = biodata['birth-date'] ?? 'N/A';
+    addressController.text = biodata['address'] ?? 'N/A';
+    phoneNumberController.text = biodata['phone-number'] ?? 'N/A';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
           Container(
-            padding: EdgeInsets.only(
-              top: 40,
-              left: 15,
-              right: 15,
-              bottom: 10,
-            ),
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
+            decoration: const BoxDecoration(
               color: Color(0xFF356899),
               borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
@@ -30,16 +69,9 @@ class _SettingState extends State<Setting> {
             child: Row(
               children: [
                 Container(
-                  padding: EdgeInsets.only(
-                    top: 40,
-                    left: 15,
-                    right: 15,
-                    bottom: 10,
-                  ),
+                  padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
                 ),
-                SizedBox(width: 10),
-                Text(
-                  "Lainnya",
+                Text("Profile",
                   style: GoogleFonts.poppins(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -49,187 +81,139 @@ class _SettingState extends State<Setting> {
               ],
             ),
           ),
-          SizedBox(height: 50),
-          Expanded(
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    width: 110,
-                    height: 110,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/profile.jpeg'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 125,
-                  left: MediaQuery.of(context).size.width / 2 - 75,
+          SizedBox(height: 20),
+          FutureBuilder<Map<String, dynamic>>(
+            future: getBiodata(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No data available'));
+              } else {
+                final biodata = snapshot.data!['data'];
+                setTextFieldData(biodata);
+                return Expanded(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(
-                        "Fanidiya Tasya",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
+                      Container(
+                        width: 90,
+                        height: 90,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/profile.jpeg'),
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 3),
-                      Text(
-                        "tasyaa@gmail.com",
-                        style: GoogleFonts.poppins(
-                          fontSize: 14,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
+                      SizedBox(height: 10),
+                      Expanded(
+                        child: ListView(
+                          padding: EdgeInsets.all(10.0),
+                          children: [
+                            TextField(
+                              controller: nameController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: 'Nama',
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextField(
+                              controller: emailController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: 'Email',
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextField(
+                              controller: birthDateController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: 'Tanggal Lahir',
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextField(
+                              controller: addressController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: 'Alamat',
+                              ),
+                            ),
+                            SizedBox(height: 10),
+                            TextField(
+                              controller: phoneNumberController,
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: 'Nomor Telepon',
+                              ),
+                            ),
+                            SizedBox(height: 5),
+                            ListTile(
+                              leading: Icon(Icons.help_outline, color: Colors.black),
+                              title: Text(
+                                "Bantuan",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios),
+                              onTap: () {
+                                Get.toNamed('/help-center');
+                              },
+                            ),
+                            Divider(),
+                            ListTile(
+                              leading: Icon(Icons.logout, color: Colors.black),
+                              title: Text(
+                                "Keluar",
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              trailing: Icon(Icons.arrow_forward_ios),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text("Konfirmasi Logout"),
+                                      content: Text("Apakah Anda yakin ingin keluar?"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(); // Tutup dialog
+                                          },
+                                          child: Text("Tidak"),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Get.offAllNamed('/login'); // Navigasi ke halaman login
+                                          },
+                                          child: Text("Ya"),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                
-              //  Positioned(
-              //     top: 220,
-              //     left: MediaQuery.of(context).size.width / 2 - 170,
-              //     child: Column(
-              //       crossAxisAlignment: CrossAxisAlignment.start,
-              //       children: [
-              //         Expanded(flex: 3, child: Text(title, style: Theme.of(context.textTheme.bodySmall, overflow: TextOverflow.ellipsis)))
-              //         Expanded(
-              //           flex: 5
-              //           child: Text(value, style: ,),,
-              //         )
-              //         Text(
-              //           "Nama Lengkap",
-              //           style: GoogleFonts.poppins(
-              //             fontSize: 14,
-              //             fontWeight: FontWeight.normal,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-                
-               
-                Positioned(
-                  top: 330,
-                  left: MediaQuery.of(context).size.width / 2 - 175,
-                  child: InkWell(
-                    onTap: () {
-                      Get.toNamed('/help-center');
-                    },
-                    child: Container(
-                      width: 350,
-                      height: 50,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.help_outline,
-                            color: Colors.black,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Bantuan",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 400,
-                  left: MediaQuery.of(context).size.width / 2 - 175,
-                  child: InkWell(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                          builder: (BuildContext context) {
-                        return AlertDialog(
-                            title: Text("Konfirmasi Logout"),
-                            content: Text("Apakah Anda yakin ingin keluar?"),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop(); // Tutup dialog
-                                },
-                                child: Text("Tidak"),
-                                ),
-                            TextButton(
-                              onPressed: () {
-                              Get.offAllNamed('/login'); // Navigasi ke halaman login
-                              },
-                              child: Text("Ya"),
-                              ),
-                              ],
-                            );
-                          },
-                        );
-                    },
-                    child: Container(
-                      width: 350,
-                      height: 50,
-                      padding: EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.3),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.logout,
-                            color: Colors.black,
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "Keluar",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.normal,
-                              color: Colors.black,
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+                );
+              }
+            },
           ),
         ],
       ),
