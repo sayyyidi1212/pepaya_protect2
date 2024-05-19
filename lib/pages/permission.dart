@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:file_picker/file_picker.dart';
 
 class Permission extends StatefulWidget {
   @override
@@ -10,9 +11,9 @@ class Permission extends StatefulWidget {
 
 class _PermissionState extends State<Permission> {
   late DateTime _selectedDate;
-  String _selectedPermissionType = 'Pilih Jenis Izin';
-  final List<String> _permissionTypes = ['Pilih Jenis Izin', 'Sakit', 'Kepentingan Pribadi', 'Cuti', 'Lainnya'];
+  String _selectedPermissionType = '';
   final TextEditingController _descriptionController = TextEditingController();
+  bool _isPermissionTypeValid = false;
 
   @override
   void initState() {
@@ -38,6 +39,34 @@ class _PermissionState extends State<Permission> {
       setState(() {
         _selectedDate = picked;
       });
+    }
+  }
+
+  void _submitForm() {
+    setState(() {
+      _isPermissionTypeValid = _selectedPermissionType.isNotEmpty;
+    });
+
+    if (_isPermissionTypeValid) {
+      // Handle form submission
+      Get.toNamed('/menu-nav');
+    }
+  }
+
+  void _pickFile() async {
+    // Pilih file
+    FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+    if (result != null) {
+      PlatformFile file = result.files.first;
+
+      // Handle file here
+      print('Path: ${file.path}');
+      print('Name: ${file.name}');
+      print('Size: ${file.size}');
+      print('Extension: ${file.extension}');
+    } else {
+      // User canceled the picker
     }
   }
 
@@ -150,35 +179,9 @@ class _PermissionState extends State<Permission> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Jenis Izin",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
           SizedBox(height: 10),
-          DropdownButtonFormField<String>(
-            value: _selectedPermissionType,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedPermissionType = newValue!;
-              });
-            },
-            items: _permissionTypes.map((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Text(value, style: GoogleFonts.poppins(fontSize: 12)),
-              );
-            }).toList(),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
-            ),
-          ),
-          SizedBox(height: 20),
           Text(
-            "Deskripsi",
+            "Keterangan",
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
@@ -193,13 +196,47 @@ class _PermissionState extends State<Permission> {
             maxLines: 3,
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+              SizedBox(width: 10),
+              Text(
+                "Unggah Bukti",
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          InkWell(
+            onTap: _pickFile,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.camera_alt),
+                  SizedBox(width: 10),
+                  Text(
+                    "Pilih File",
+                    style: GoogleFonts.poppins(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 50),
             child: ElevatedButton(
-              onPressed: () {
-                // Handle form submission
-                Get.toNamed('/menu-nav');
-              },
+              onPressed: _submitForm,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF305E8B),
                 minimumSize: Size(double.infinity, 50),
