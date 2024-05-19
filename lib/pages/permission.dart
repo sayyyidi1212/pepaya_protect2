@@ -10,6 +10,9 @@ class Permission extends StatefulWidget {
 
 class _PermissionState extends State<Permission> {
   late DateTime _selectedDate;
+  String _selectedPermissionType = 'Pilih Jenis Izin';
+  final List<String> _permissionTypes = ['Pilih Jenis Izin', 'Sakit', 'Kepentingan Pribadi', 'Cuti', 'Lainnya'];
+  final TextEditingController _descriptionController = TextEditingController();
 
   @override
   void initState() {
@@ -46,8 +49,16 @@ class _PermissionState extends State<Permission> {
       body: Column(
         children: [
           _buildAppBar(),
-          _buildDateSelector(formattedDate),
-          _buildPermissionType(),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  _buildDateSelector(formattedDate),
+                  _buildPermissionForm(),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -76,8 +87,9 @@ class _PermissionState extends State<Permission> {
             color: Colors.white,
           ),
           Padding(
-            padding: EdgeInsets.only(left: 40, bottom: 5),
-            child: Text("Form Izin",
+            padding: const EdgeInsets.only(left: 40, bottom: 5),
+            child: Text(
+              "Form Izin",
               style: GoogleFonts.poppins(
                 fontSize: 20,
                 fontWeight: FontWeight.w500,
@@ -94,100 +106,100 @@ class _PermissionState extends State<Permission> {
 
   Widget _buildDateSelector(String formattedDate) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(230.0, 30.0, 0.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            width: 150,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.3),
-                  spreadRadius: 2,
-                  blurRadius: 5,
-                ),
-              ],
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.calendar_month_outlined),
-                  onPressed: () => _selectDate(context),
-                  color: Colors.blue.shade900,
-                ),
-                Text(formattedDate,
-                  style: GoogleFonts.poppins(fontSize: 13),
-                ),
-              ],
+          Expanded(
+            child: Container(
+              height: 40,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.3),
+                    spreadRadius: 2,
+                    blurRadius: 5,
+                  ),
+                ],
+              ),
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.calendar_month_outlined),
+                    onPressed: () => _selectDate(context),
+                    color: Colors.blue.shade900,
+                  ),
+                  Text(
+                    formattedDate,
+                    style: GoogleFonts.poppins(fontSize: 13),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
       ),
     );
   }
-  
-  Widget _buildPermissionType() {
-  List<String> permissionTypes = ['Pilih Jenis Izin', 'Sakit', 'Kepentingan Pribadi', 'Cuti', 'Lainnya']; 
-  String selectedPermissionType = 'Pilih Jenis Izin'; 
 
-  return Container(
-      padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
+  Widget _buildPermissionForm() {
+    return Padding(
+      padding: const EdgeInsets.all(20.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Jenis Izin",
+          Text(
+            "Jenis Izin",
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
           SizedBox(height: 10),
-          Stack(
-            children: [
-              DropdownButtonFormField<String>(
-                value: selectedPermissionType,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedPermissionType = newValue!;
-                  });
-                },
-                items: permissionTypes.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value, style: GoogleFonts.poppins(fontSize: 12)),
-                  );
-                }).toList(),
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
-                ),
-              ),
-            ],
+          DropdownButtonFormField<String>(
+            value: _selectedPermissionType,
+            onChanged: (String? newValue) {
+              setState(() {
+                _selectedPermissionType = newValue!;
+              });
+            },
+            items: _permissionTypes.map((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value, style: GoogleFonts.poppins(fontSize: 12)),
+              );
+            }).toList(),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
+            ),
           ),
-          SizedBox(height: 20), 
-          Text("Deskripsi",
+          SizedBox(height: 20),
+          Text(
+            "Deskripsi",
             style: GoogleFonts.poppins(
               fontSize: 14,
               fontWeight: FontWeight.w500,
             ),
           ),
-          SizedBox(height: 10), 
+          SizedBox(height: 10),
           TextFormField(
+            controller: _descriptionController,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
             ),
-            maxLines: 3, 
+            maxLines: 3,
           ),
-          SizedBox(height: 20), 
+          SizedBox(height: 20),
           Container(
             margin: EdgeInsets.symmetric(horizontal: 50),
             child: ElevatedButton(
-              onPressed: () => Get.toNamed('/menu-nav'),
+              onPressed: () {
+                // Handle form submission
+                Get.toNamed('/menu-nav');
+              },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF305E8B),
                 minimumSize: Size(double.infinity, 50),
@@ -196,7 +208,8 @@ class _PermissionState extends State<Permission> {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: Text( "Kirim",
+              child: Text(
+                "Kirim",
                 style: GoogleFonts.poppins(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -206,7 +219,6 @@ class _PermissionState extends State<Permission> {
           ),
         ],
       ),
-  );
-}
-
+    );
+  }
 }

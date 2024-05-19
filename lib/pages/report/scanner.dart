@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:patrol_track_mobile/pages/report/report.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class Scanner extends StatefulWidget {
   @override
@@ -10,28 +10,8 @@ class Scanner extends StatefulWidget {
 class _ScannerState extends State<Scanner> {
   bool _flashOn = false;
   bool _frontCam = false;
-  final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
+  GlobalKey _qrKey = GlobalKey();
   QRViewController? _controller;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkCameraPermission();
-  }
-
-  void _checkCameraPermission() async {
-    var status = await Permission.camera.status;
-    if (!status.isGranted) {
-      var result = await Permission.camera.request();
-      if (result.isGranted) {
-        // Permission granted, proceed with initializing camera
-        setState(() {});
-      } else {
-        // Handle the case where permission is not granted
-        print('Camera permission denied');
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,11 +58,10 @@ class _ScannerState extends State<Scanner> {
                 IconButton(
                   onPressed: () async {
                     await _controller?.flipCamera();
-                    setState(() {
-                      _frontCam = !_frontCam;
-                    });
+                    setState(() {});
                   },
-                  icon: Icon(_frontCam ? Icons.camera_front : Icons.camera_rear),
+                  icon:
+                      Icon(_frontCam ? Icons.camera_front : Icons.camera_rear),
                   color: Colors.white,
                 ),
                 IconButton(
@@ -99,20 +78,15 @@ class _ScannerState extends State<Scanner> {
   }
 
   void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      _controller = controller;
-    });
-    controller.scannedDataStream.listen((val) async {
-      print('Scanned QR: ${val.code}'); // Debug log
-      if (mounted) {
-        try {
-          await _controller?.pauseCamera();
-          await Future.delayed(Duration(milliseconds: 300)); // Delay for smooth navigation
-          Navigator.pop(context, val.code);
-        } catch (e) {
-          print('Error: $e'); // Handle error
-        }
-      }
+    this._controller = controller;
+    controller.scannedDataStream.listen((Barcode barcode) async {
+      await controller.pauseCamera();
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Report(scanData: barcode.code ?? 'No data found'),
+        ),
+      );
     });
   }
 
