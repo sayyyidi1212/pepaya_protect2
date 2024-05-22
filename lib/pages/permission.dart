@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:file_picker/file_picker.dart';
+// import 'package:file_picker/file_picker.dart';
 
 class Permission extends StatefulWidget {
   @override
@@ -50,23 +50,6 @@ class _PermissionState extends State<Permission> {
     if (_isPermissionTypeValid) {
       // Handle form submission
       Get.toNamed('/menu-nav');
-    }
-  }
-
-  void _pickFile() async {
-    // Pilih file
-    FilePickerResult? result = await FilePicker.platform.pickFiles();
-
-    if (result != null) {
-      PlatformFile file = result.files.first;
-
-      // Handle file here
-      print('Path: ${file.path}');
-      print('Name: ${file.name}');
-      print('Size: ${file.size}');
-      print('Extension: ${file.extension}');
-    } else {
-      // User canceled the picker
     }
   }
 
@@ -174,88 +157,105 @@ class _PermissionState extends State<Permission> {
   }
 
   Widget _buildPermissionForm() {
-    return Padding(
-      padding: const EdgeInsets.all(20.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Text(
-            "Keterangan",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
+  return Padding(
+    padding: const EdgeInsets.all(20.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 10),
+        Text(
+          "Keterangan",
+          style: GoogleFonts.poppins(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
           ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
+        ),
+        SizedBox(height: 10),
+        TextFormField(
+          controller: _descriptionController,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
           ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              SizedBox(width: 10),
-              Text(
-                "Unggah Bukti",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
+          maxLines: 3,
+        ),
+        SizedBox(height: 20),
+        Row(
+          children: [
+            SizedBox(width: 10),
+            Text(
+              "Unggah Bukti",
+              style: GoogleFonts.poppins(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
               ),
-            ],
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        InkWell(
+          onTap: () {
+        //     void _submitForm() async {
+        //     // Pilih file
+        //       FilePickerResult? result = await FilePicker.platform.pickFiles();
+
+        //     if (result != null) {
+        //     PlatformFile file = result.files.first;
+
+        //    // Handle file here
+        //     print('Path: ${file.path}');
+        //     print('Name: ${file.name}');
+        //     print('Size: ${file.size}');
+        //     print('Extension: ${file.extension}');
+        //   } else {
+        //         // User canceled the picker
+        //  }
+        // }
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.camera_alt),
+                SizedBox(width: 10),
+                Text(
+                  "Pilih File",
+                  style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
-          SizedBox(height: 10),
-          InkWell(
-            onTap: _pickFile,
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+        ),
+        SizedBox(height: 20),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 50),
+          child: ElevatedButton(
+            onPressed: _submitForm,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Color(0xFF305E8B),
+              minimumSize: Size(double.infinity, 50),
+              padding: EdgeInsets.symmetric(vertical: 15),
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.camera_alt),
-                  SizedBox(width: 10),
-                  Text(
-                    "Pilih File",
-                    style: GoogleFonts.poppins(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
+            ),
+            child: Text(
+              "Kirim",
+              style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ),
-          SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 50),
-            child: ElevatedButton(
-              onPressed: _submitForm,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF305E8B),
-                minimumSize: Size(double.infinity, 50),
-                padding: EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(
-                "Kirim",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

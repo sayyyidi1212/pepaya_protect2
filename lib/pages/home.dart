@@ -81,8 +81,8 @@ class _HomeState extends State<Home> {
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(left: 3),
-                                  child: Text(
-                                    biodata['data']['name'].toString(),
+                                  child: Text("Nanda",
+                                    // biodata['data']['name'].toString(),
                                     style: GoogleFonts.poppins(
                                       fontSize: 20,
                                       fontWeight: FontWeight.w600,
@@ -92,19 +92,19 @@ class _HomeState extends State<Home> {
                                     ),
                                   ),
                                 ),
-                                 Padding(
-                                  padding: EdgeInsets.only(left: 3, bottom: 25),
-                                  child: Text(
-                                    biodata['data']['email'],
-                                    style: GoogleFonts.poppins(
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w400,
-                                      letterSpacing: 1,
-                                      wordSpacing: 2,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                                //  Padding(
+                                //   padding: EdgeInsets.only(left: 3, bottom: 25),
+                                //   child: Text(
+                                //     biodata['data']['email'],
+                                //     style: GoogleFonts.poppins(
+                                //       fontSize: 13,
+                                //       fontWeight: FontWeight.w400,
+                                //       letterSpacing: 1,
+                                //       wordSpacing: 2,
+                                //       color: Colors.white,
+                                //     ),
+                                //   ),
+                                // ),
                               ],
                             ),
                           ),

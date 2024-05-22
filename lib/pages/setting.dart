@@ -108,104 +108,166 @@ class _SettingState extends State<Setting> {
                           ),
                         ),
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 0),
                       Expanded(
                         child: ListView(
-                          padding: EdgeInsets.all(10.0),
+                          padding: EdgeInsets.all(20.0),
                           children: [
-                            TextField(
-                              controller: nameController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'Nama',
-                              ),
-                            ),
                             SizedBox(height: 10),
-                            TextField(
-                              controller: emailController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'Email',
-                              ),
-                            ),
+Container(
+  decoration: BoxDecoration(
+    color: Color(0xFFF2F2F3),
+    borderRadius: BorderRadius.circular(7),
+  ),
+  child: Row( 
+    children: [
+      Padding( 
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Icon(
+          Icons.person, 
+          color: Colors.grey, 
+          size: 20.0, 
+        ),
+      ),
+      Expanded( 
+        child: TextFormField(
+          controller: nameController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          style: TextStyle(color: Colors.black),
+          maxLines: 1,
+          readOnly: true,
+        ),
+      ),
+    ],
+  ),
+),
                             SizedBox(height: 10),
-                            TextField(
-                              controller: birthDateController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'Tanggal Lahir',
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            TextField(
-                              controller: addressController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'Alamat',
-                              ),
-                            ),
-                            SizedBox(height: 10),
-                            TextField(
-                              controller: phoneNumberController,
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: 'Nomor Telepon',
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            ListTile(
-                              leading: Icon(Icons.help_outline, color: Colors.black),
-                              title: Text(
-                                "Bantuan",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              trailing: Icon(Icons.arrow_forward_ios),
-                              onTap: () {
-                                Get.toNamed('/help-center');
-                              },
-                            ),
-                            Divider(),
-                            ListTile(
-                              leading: Icon(Icons.logout, color: Colors.black),
-                              title: Text(
-                                "Keluar",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.normal,
-                                  color: Colors.black,
-                                ),
-                              ),
-                              trailing: Icon(Icons.arrow_forward_ios),
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return AlertDialog(
-                                      title: Text("Konfirmasi Logout"),
-                                      content: Text("Apakah Anda yakin ingin keluar?"),
-                                      actions: [
-                                        TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop(); // Tutup dialog
-                                          },
-                                          child: Text("Tidak"),
-                                        ),
-                                        TextButton(
-                                          onPressed: () {
-                                            Get.offAllNamed('/login'); // Navigasi ke halaman login
-                                          },
-                                          child: Text("Ya"),
-                                        ),
-                                      ],
-                                    );
-                                  },
-                                );
-                              },
-                            ),
+Container(
+  decoration: BoxDecoration(
+    color: Color(0xFFF2F2F3),
+    borderRadius: BorderRadius.circular(7),
+  ),
+  child: Row( 
+    children: [
+      Padding( 
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Icon(
+          Icons.email_outlined, 
+          color: Colors.grey, 
+          size: 20.0, 
+        ),
+      ),
+      Expanded( 
+        child: TextFormField(
+          controller: emailController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          style: TextStyle(color: Colors.black),
+          maxLines: 1,
+          readOnly: true,
+        ),
+      ),
+    ],
+  ),
+),
+SizedBox(height: 10),
+Container(
+  decoration: BoxDecoration(
+    color: Color(0xFFF2F2F3),
+    borderRadius: BorderRadius.circular(7),
+  ),
+  child: Row( 
+    children: [
+      Padding( 
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Icon(
+          Icons.calendar_month_outlined, 
+          color: Colors.grey, 
+          size: 20.0, 
+        ),
+      ),
+      Expanded( 
+        child: TextFormField(
+          controller: birthDateController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          style: TextStyle(color: Colors.black),
+          maxLines: 1,
+          readOnly: true,
+        ),
+      ),
+    ],
+  ),
+),
+SizedBox(height: 10),
+Container(
+  decoration: BoxDecoration(
+    color: Color(0xFFF2F2F3),
+    borderRadius: BorderRadius.circular(7),
+  ),
+  child: Row( 
+    children: [
+      Padding( 
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Icon(
+          Icons.phone_enabled_outlined, 
+          color: Colors.grey, 
+          size: 20.0, 
+        ),
+      ),
+      Expanded( 
+        child: TextFormField(
+          controller: phoneNumberController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          style: TextStyle(color: Colors.black),
+          maxLines: 1,
+          readOnly: true,
+        ),
+      ),
+    ],
+  ),
+),
+SizedBox(height: 10),
+Container(
+  decoration: BoxDecoration(
+    color: Color(0xFFF2F2F3),
+    borderRadius: BorderRadius.circular(7),
+  ),
+  child: Row( 
+    children: [
+      Padding( 
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Icon(
+          Icons.home, 
+          color: Colors.grey, 
+          size: 20.0, 
+        ),
+      ),
+      Expanded( 
+        child: TextFormField(
+          controller: addressController,
+          decoration: InputDecoration(
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(horizontal: 10),
+          ),
+          style: TextStyle(color: Colors.black),
+          maxLines: 3,
+          readOnly: true,
+        ),
+      ),
+    ],
+  ),
+),
                           ],
                         ),
                       ),
@@ -215,6 +277,52 @@ class _SettingState extends State<Setting> {
               }
             },
           ),
+          Container(
+  height: MediaQuery.of(context).size.height * 0.15, 
+  alignment: Alignment.topCenter, 
+  child: ElevatedButton(
+    onPressed: () {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Konfirmasi Logout"),
+            content: Text("Apakah Anda yakin ingin keluar?"),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close dialog
+                },
+                child: Text("Tidak"),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.offAllNamed('/login'); // Navigate to login page
+                },
+                child: Text("Ya"),
+              ),
+            ],
+          );
+        },
+      );
+    },
+    child: Text(
+      "Keluar",
+      style: GoogleFonts.poppins(
+        fontSize: 14,
+        fontWeight: FontWeight.normal,
+        color: Colors.white,
+      ),
+    ),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: Colors.blue,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+    ),
+  ),
+),
+
         ],
       ),
     );
