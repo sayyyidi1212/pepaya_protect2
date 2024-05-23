@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patrol_track_mobile/components/header.dart';
+import 'package:patrol_track_mobile/core/controllers/schedule_controller.dart';
 import 'package:patrol_track_mobile/core/models/schedule.dart';
-import 'package:patrol_track_mobile/core/services/schedule_service.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key}) : super(key: key);
@@ -11,27 +13,12 @@ class SchedulePage extends StatefulWidget {
 }
 
 class _ScheduleState extends State<SchedulePage> {
-  List<Schedule> schedules = [];
-  bool isLoading = true;
-
-  void fetchSchedules() async {
-    try {
-      final result = await ScheduleService.fetchSchedules();
-      setState(() {
-        schedules = result;
-        isLoading = false;
-      });
-    } catch (e) {
-      setState(() {
-        isLoading = false;
-      });
-    }
-  }
+  late Future<List<Schedule>> _futureSchedules;
 
   @override
   void initState() {
     super.initState();
-    fetchSchedules();
+    _futureSchedules = ScheduleController.getSchedules(context);
   }
 
   @override
@@ -39,38 +26,53 @@ class _ScheduleState extends State<SchedulePage> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-            decoration: const BoxDecoration(
-              color: Color(0xFF356899),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-                ),
-                Text("Jadwal",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const Header(title: "Jadwal"),
           Expanded(
-            child: isLoading
-            ? Center(child: CircularProgressIndicator())
-            : ListView.builder(
-              itemCount: schedules.length,
-              itemBuilder: (context, index) {
-                final schedule = schedules[index];
-                return DaySchedule(schedule);
+            child: FutureBuilder<List<Schedule>>(
+              future: _futureSchedules,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                  // return Center(
+                  //   child: Column(
+                  //     mainAxisAlignment: MainAxisAlignment.center,
+                  //     children: [
+                  //       Image.asset(
+                  //           'assets/error.png'),
+                  //       SizedBox(height: 16),
+                  //       Text('Error: ${snapshot.error}'),
+                  //     ],
+                  //   ),
+                  // );
+                } else {
+                  List<Schedule> schedules = snapshot.data!;
+                  if (schedules.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // Image.asset(
+                          //     'assets/images/icon_success.png'
+                          // ),
+                          SizedBox(height: 16),
+                          Text('Schedule not yet available.',
+                            style: GoogleFonts.poppins(fontSize: 15),
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    return ListView.builder(
+                      itemCount: schedules.length,
+                      itemBuilder: (context, index) {
+                        final schedule = schedules[index];
+                        return DaySchedule(schedule);
+                      },
+                    );
+                  }
+                }
               },
             ),
           ),
@@ -88,9 +90,9 @@ class DaySchedule extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(10),
+      margin: const EdgeInsets.all(5),
       child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -99,29 +101,34 @@ class DaySchedule extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(
-                  Icons.date_range_sharp,
-                  color: Colors.black,
-                ),
-                SizedBox(width: 8),
-                Text("${schedule.day}",
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: const Color(0xFF3085FE).withOpacity(0.1),
+                  ),
+                  child: const Icon(
+                    FontAwesomeIcons.calendarWeek,
+                    color: Color(0xFF305E8B),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(height: 5),
-            Row(
-              children: [
-                Text("Jam: ",
-                  style: GoogleFonts.poppins(fontSize: 13),
-                ),
-                Text(
-                  "${schedule.startTime} - ${schedule.endTime}",
-                  style: GoogleFonts.poppins(fontSize: 13),
+                SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("${schedule.day}",
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text("${schedule.startTime} - ${schedule.endTime}",
+                      style: GoogleFonts.poppins(fontSize: 13),
+                    ),
+                  ],
                 ),
               ],
             ),
