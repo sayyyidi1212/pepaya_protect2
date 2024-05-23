@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patrol_track_mobile/components/history_card.dart';
 import 'package:patrol_track_mobile/core/models/user.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -32,13 +33,13 @@ class _HomeState extends State<Home> {
                   ),
                 ),
                 TextButton(
+                  onPressed: () => Get.toNamed('/permission'),
                   child: Text(
                     "Apply for permission",
                     style: GoogleFonts.poppins(
                       color: Colors.red,
                     ),
                   ),
-                  onPressed: () => Get.toNamed('/permission'),
                 ),
               ],
             ),
@@ -46,10 +47,8 @@ class _HomeState extends State<Home> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              twoCard("Check In", "06:00 AM", "Go to Work",
-                  FontAwesomeIcons.signIn),
-              twoCard(
-                  "Check Out", "02:00 PM", "Go Home", FontAwesomeIcons.signOut),
+              twoCard("Check In", "06:00 AM", "Go to Work", FontAwesomeIcons.signIn),
+              twoCard("Check Out", "02:00 PM", "Go Home", FontAwesomeIcons.signOut),
             ],
           ),
           Column(
@@ -84,20 +83,20 @@ class _HomeState extends State<Home> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "History Attendance",
+                      "History Presence",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     TextButton(
+                      onPressed: () {},
                       child: Text(
                         "See all",
                         style: GoogleFonts.poppins(
                           color: Colors.blue,
                         ),
                       ),
-                      onPressed: () {},
                     ),
                   ],
                 ),
@@ -108,74 +107,12 @@ class _HomeState extends State<Home> {
             child: ListView.builder(
               itemCount: 10,
               itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.all(5),
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: const Color(0xFF3085FE).withOpacity(0.1),
-                              ),
-                              child: const Icon(
-                                FontAwesomeIcons.signIn,
-                                color: Color(0xFF305E8B),
-                              ),
-                            ),
-                            SizedBox(width: 20),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Item $index",
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                Text("Details of item $index"),
-                              ],
-                            ),
-                          ],
-                        ),
-                        // Spacer atau jarak dinamis
-                        SizedBox(width: 20),
-                        Expanded(
-                          flex: 2,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "06:05 AM",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Text(
-                                "Done",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                return MyCard(
+                  icon: IconType.CheckIn,
+                  title: "Check-In Title",
+                  subtitle: "Check-In Subtitle",
+                  time: "06:00 AM",
+                  status: "Done",
                 );
               },
             ),
@@ -219,8 +156,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 3, bottom: 25),
-                  child: Text(
-                    '${user.name}',
+                  child: Text('${user.name}',
                     // child: Text('Fanidiya Tasya',
                     style: GoogleFonts.poppins(
                       fontSize: 20,

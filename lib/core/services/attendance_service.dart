@@ -1,0 +1,28 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:patrol_track_mobile/core/models/attendance.dart';
+import 'package:patrol_track_mobile/core/utils/Constant.dart';
+
+class AttendanceService {
+
+  Future<List<Attendance>> getAllAttendances(String token) async {
+    final url = Uri.parse('${Constant.BASE_URL}/history-presence');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': '$token'},
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+        List<Attendance> attendances = List<Attendance>.from(
+          result['data'].map(
+            (attendances) => Attendance.fromJson(attendances),
+          ),
+        );
+      return attendances;
+    } else {
+      throw Exception('Failed to load attendances');
+    }
+  }
+}

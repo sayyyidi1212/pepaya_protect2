@@ -1,1 +1,0 @@
-const BaseUrl = 'http://patroltrack.my.id';

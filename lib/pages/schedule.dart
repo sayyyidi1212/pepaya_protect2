@@ -35,17 +35,6 @@ class _ScheduleState extends State<SchedulePage> {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                  // return Center(
-                  //   child: Column(
-                  //     mainAxisAlignment: MainAxisAlignment.center,
-                  //     children: [
-                  //       Image.asset(
-                  //           'assets/error.png'),
-                  //       SizedBox(height: 16),
-                  //       Text('Error: ${snapshot.error}'),
-                  //     ],
-                  //   ),
-                  // );
                 } else {
                   List<Schedule> schedules = snapshot.data!;
                   if (schedules.isEmpty) {
@@ -53,9 +42,6 @@ class _ScheduleState extends State<SchedulePage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          // Image.asset(
-                          //     'assets/images/icon_success.png'
-                          // ),
                           SizedBox(height: 16),
                           Text('Schedule not yet available.',
                             style: GoogleFonts.poppins(fontSize: 15),

@@ -1,15 +1,10 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'package:patrol_track_mobile/baseUrl.dart';
 import 'package:patrol_track_mobile/components/background_auth.dart';
 import 'package:patrol_track_mobile/components/button.dart';
 import 'package:patrol_track_mobile/components/text_field.dart';
-import 'package:patrol_track_mobile/core/controllers/SaveToken.dart';
-import 'package:http/http.dart' as http;
 import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
-import 'package:quickalert/quickalert.dart';
 
 class Login extends StatefulWidget {
   final String title;
@@ -29,37 +24,6 @@ class _LoginState extends State<Login> {
   bool _isObscure = true;
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
-
-  Future<void> AuthLogin(BuildContext context) async {
-    try {
-      final Map<String, dynamic> requestBody = {
-        'email': email.text,
-        'password': password.text,
-      };
-      final response = await http.post(Uri.parse("${BaseUrl}/api/login"),
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: jsonEncode(requestBody));
-      Map<String, dynamic> data =
-          json.decode(response.body) as Map<String, dynamic>;
-
-      if (response.statusCode == 200) {
-        String token = data['token'];
-        await saveToken(token);
-        Get.toNamed('/menu-nav');
-      } else {
-        QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: 'Gagal',
-          text: data['error'],
-        );
-      }
-    } catch (er) {
-      print('error${er}');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +81,6 @@ class _LoginState extends State<Login> {
             SizedBox(height: 20),
             MyButton(
               text: "Login",
-              // onPressed: () => AuthLogin(context),
               onPressed: () => AuthController.login(context, email, password),
             ),
           ],
