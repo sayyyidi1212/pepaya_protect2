@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patrol_track_mobile/components/header.dart';
 
 class History extends StatefulWidget {
   @override
@@ -23,30 +24,7 @@ class _HistoryState extends State<History> {
     return Scaffold(
       body: Column(
         children: [
-          Container(
-            padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-            decoration: const BoxDecoration(
-              color: Color(0xFF356899),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(30),
-                bottomRight: Radius.circular(30),
-              ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
-                ),
-                Text("History Activity",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+          const Header(title: "History Activity"),
           Expanded(
             child: ListView.builder(
               itemCount: 10, 

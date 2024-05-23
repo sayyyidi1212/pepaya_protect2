@@ -53,7 +53,7 @@ class _MenuNavState extends State<MenuNav> {
                 _buildTabItem(1, Icons.calendar_month, 'Schedule'),
                 SizedBox(width: 40),
                 _buildTabItem(2, Icons.history, 'History'),
-                _buildTabItem(3, Icons.settings, 'Setting'),
+                _buildTabItem(3, Icons.person, 'Profile'),
               ],
             ),
           ),

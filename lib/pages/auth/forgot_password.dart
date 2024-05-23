@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:patrol_track_mobile/pages/auth/background.dart';
+import 'package:patrol_track_mobile/components/background_auth.dart';
+import 'package:patrol_track_mobile/components/button.dart';
 
 class ForgotPass extends StatefulWidget {
   final String title;
@@ -47,7 +48,7 @@ class _ForgotPass extends State<ForgotPass> {
                         bottom: BorderSide(color: Colors.grey[200]!),
                       ),
                     ),
-                    child: TextFormField(
+                    child: TextField(
                       decoration: InputDecoration(
                         labelText: "Email",
                         labelStyle: GoogleFonts.poppins(
@@ -62,25 +63,9 @@ class _ForgotPass extends State<ForgotPass> {
               ),
             ),
             SizedBox(height: 15),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 50),
-              child: ElevatedButton(
-                onPressed: () => Get.toNamed('/otp'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF305E8B),
-                  minimumSize: Size(double.infinity, 50),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text("Send Code",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            MyButton(
+              text: "Send Code",
+              onPressed: () => Get.toNamed('/otp'),
             ),
             SizedBox(height: 20),
             Row(

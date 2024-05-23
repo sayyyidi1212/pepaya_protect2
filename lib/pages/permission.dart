@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:patrol_track_mobile/components/header.dart';
 // import 'package:file_picker/file_picker.dart';
 
 class Permission extends StatefulWidget {
@@ -60,7 +61,7 @@ class _PermissionState extends State<Permission> {
     return Scaffold(
       body: Column(
         children: [
-          _buildAppBar(),
+          const Header(title: "Permission", backButton: true),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
@@ -68,46 +69,6 @@ class _PermissionState extends State<Permission> {
                   _buildDateSelector(formattedDate),
                   _buildPermissionForm(),
                 ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAppBar() {
-    return Container(
-      padding: const EdgeInsets.only(
-        top: 40,
-        left: 15,
-        right: 15,
-        bottom: 10,
-      ),
-      decoration: const BoxDecoration(
-        color: Color(0xFF356899),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
-      ),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () => Get.back(),
-            color: Colors.white,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 40, bottom: 5),
-            child: Text(
-              "Form Izin",
-              style: GoogleFonts.poppins(
-                fontSize: 20,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 1,
-                wordSpacing: 2,
-                color: Colors.white,
               ),
             ),
           ),

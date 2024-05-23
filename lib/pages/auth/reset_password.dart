@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'background.dart';
+import 'package:patrol_track_mobile/components/button.dart';
+import '../../components/background_auth.dart';
 
 class ResetPassword extends StatefulWidget {
   final String title;
@@ -10,7 +11,8 @@ class ResetPassword extends StatefulWidget {
   const ResetPassword({
     Key? key,
     this.title = "Reset Password",
-    this.subtitle = "Enter your email and verification code to reset your password.",
+    this.subtitle =
+        "Enter your email and verification code to reset your password.",
   }) : super(key: key);
 
   @override
@@ -122,32 +124,15 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ],
               ),
             ),
-            Container(
-              margin: const EdgeInsets.symmetric(horizontal: 50),
-              child: ElevatedButton(
-                onPressed: () {
-                  Get.offNamed('/login');
-                  // Get.snackbar(
-                  //     'Reset Password', 'Password reset berhasil!',
-                  //     backgroundColor: Colors.green,
-                  //     colorText: Colors.white,
-                  //     snackPosition: SnackPosition.BOTTOM);
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF305E8B),
-                  minimumSize: Size(double.infinity, 50),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text("Reset Password",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            MyButton(
+              text: "Reset Password",
+              onPressed: () {
+                Get.offNamed('/login');
+                Get.snackbar('Reset Password', 'Password reset berhasil!',
+                    backgroundColor: Colors.green,
+                    colorText: Colors.white,
+                    snackPosition: SnackPosition.BOTTOM);
+              },
             ),
           ],
         ),

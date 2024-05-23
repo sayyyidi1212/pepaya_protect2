@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
-import 'background.dart';
+import 'package:patrol_track_mobile/components/button.dart';
+import '../../components/background_auth.dart';
 
 class Otp extends StatefulWidget {
   final String title;
@@ -81,25 +82,9 @@ class _OtpState extends State<Otp> {
               ),
             ),
             SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 50),
-              child: ElevatedButton(
-                onPressed: () => Get.toNamed('/reset-pass'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF305E8B),
-                  minimumSize: Size(double.infinity, 50),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text("Verify",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            MyButton(
+              text: "Verify",
+              onPressed: () => Get.toNamed('/reset-pass'),
             ),
           ],
         ),

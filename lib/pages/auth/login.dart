@@ -1,14 +1,15 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:patrol_track_mobile/baseUrl.dart';
+import 'package:patrol_track_mobile/components/background_auth.dart';
+import 'package:patrol_track_mobile/components/button.dart';
+import 'package:patrol_track_mobile/components/text_field.dart';
 import 'package:patrol_track_mobile/core/controllers/SaveToken.dart';
-import 'background.dart';
 import 'package:http/http.dart' as http;
+import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
 import 'package:quickalert/quickalert.dart';
-
 
 class Login extends StatefulWidget {
   final String title;
@@ -30,36 +31,33 @@ class _LoginState extends State<Login> {
   TextEditingController password = TextEditingController();
 
   Future<void> AuthLogin(BuildContext context) async {
-    {
-      try {
-        final Map<String, dynamic> requestBody = {
-          'email': email.text,
-          'password': password.text,
-        };
-        final response =
-            await http.post(Uri.parse("${BaseUrl}/api/login"),
-                headers: <String, String>{
-                  'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: jsonEncode(requestBody));
-        Map<String, dynamic> data =
-            json.decode(response.body) as Map<String, dynamic>;
+    try {
+      final Map<String, dynamic> requestBody = {
+        'email': email.text,
+        'password': password.text,
+      };
+      final response = await http.post(Uri.parse("${BaseUrl}/api/login"),
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(requestBody));
+      Map<String, dynamic> data =
+          json.decode(response.body) as Map<String, dynamic>;
 
-        if (response.statusCode == 200) {
-          String token = data['token'];
-          await saveToken(token);
-          Get.toNamed('/menu-nav');
-        } else {
-          QuickAlert.show(
-            context: context,
-            type: QuickAlertType.error,
-            title: 'Gagal',
-            text: data['error'],
-          );
-        }
-      } catch (er) {
-        print('error${er}');
+      if (response.statusCode == 200) {
+        String token = data['token'];
+        await saveToken(token);
+        Get.toNamed('/menu-nav');
+      } else {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Gagal',
+          text: data['error'],
+        );
       }
+    } catch (er) {
+      print('error${er}');
     }
   }
 
@@ -86,54 +84,20 @@ class _LoginState extends State<Login> {
               ),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]!),
-                      ),
-                    ),
-                    child: TextField(
-                      controller: email,
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        labelStyle: GoogleFonts.poppins(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
-                      ),
-                    ),
+                  MyTextField(
+                    controller: email,
+                    labelText: "Email",
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]!),
-                      ),
-                    ),
-                    child: TextField(
-                      controller: password,
-                      obscureText: _isObscure,
-                      decoration: InputDecoration(
-                        labelText: "Password",
-                        labelStyle: GoogleFonts.poppins(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            _isObscure
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              _isObscure = !_isObscure;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
+                  MyTextField(
+                    controller: password,
+                    labelText: "Password",
+                    isPassword: true,
+                    isObscure: _isObscure,
+                    toggleObscureText: () {
+                      setState(() {
+                        _isObscure = !_isObscure;
+                      });
+                    },
                   ),
                 ],
               ),
@@ -151,26 +115,10 @@ class _LoginState extends State<Login> {
               ],
             ),
             SizedBox(height: 20),
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 50),
-              child: ElevatedButton(
-                onPressed: () => AuthLogin(context),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color(0xFF305E8B),
-                  minimumSize: Size(double.infinity, 50),
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  "Login",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
+            MyButton(
+              text: "Login",
+              // onPressed: () => AuthLogin(context),
+              onPressed: () => AuthController.login(context, email, password),
             ),
           ],
         ),
