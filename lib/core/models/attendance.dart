@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class Attendance {
   final int id;
   final DateTime date;
-  final TimeOfDay? checkIn;
-  final TimeOfDay? checkOut;
+  final TimeOfDay checkIn;
+  final TimeOfDay checkOut;
   final String status;
 
   Attendance({
@@ -19,8 +19,8 @@ class Attendance {
     return Attendance(
       id: json['id'],
       date: DateTime.parse(json['date']),
-      checkIn: json['check_in_time'] != null ? _parseTimeOfDay(json['check_in_time']) : null,
-      checkOut: json['check_out_time'] != null ? _parseTimeOfDay(json['check_out_time']) : null,
+      checkIn: _parseTimeOfDay(json['check_in_time']) ?? TimeOfDay(hour: 0, minute: 0),
+      checkOut: _parseTimeOfDay(json['check_out_time']) ?? TimeOfDay(hour: 0, minute: 0),
       status: json['status'],
     );
   }

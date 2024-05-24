@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:patrol_track_mobile/components/history_card.dart';
+import 'package:patrol_track_mobile/core/controllers/attendance_controller.dart';
+import 'package:patrol_track_mobile/core/controllers/report_controller.dart';
+import 'package:patrol_track_mobile/core/models/attendance.dart';
 import 'package:patrol_track_mobile/core/models/user.dart';
-import 'package:table_calendar/table_calendar.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -13,6 +16,21 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DateTime today = DateTime.now();
+  late Future<List<Attendance>> _attendanceFuture;
+  bool showAlert = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _attendanceFuture = AttendanceController.getAttendanceHistory(context);
+  }
+
+  String _formatTime(TimeOfDay time) {
+    final now = DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final format = DateFormat.Hm();
+    return format.format(dt);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +38,10 @@ class _HomeState extends State<Home> {
       body: Column(
         children: [
           _headerHome(),
-          Padding(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
             padding: EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -51,32 +72,26 @@ class _HomeState extends State<Home> {
               twoCard("Check Out", "02:00 PM", "Go Home", FontAwesomeIcons.signOut),
             ],
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  TableCalendar(
-                    locale: "id_ID",
-                    rowHeight: 40,
-                    headerStyle: const HeaderStyle(
-                      formatButtonVisible: false,
-                      titleCentered: true,
-                    ),
-                    focusedDay: today,
-                    firstDay: DateTime.utc(2012),
-                    lastDay: DateTime.utc(2040),
-                    calendarFormat: CalendarFormat.week,
-                    calendarStyle: const CalendarStyle(
-                      todayDecoration: BoxDecoration(
-                        color: Color(0xFF356899),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 15),
+                FutureBuilder<bool>(
+                  future: ReportController.checkTodayReport(context),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SizedBox();
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else {
+                      if (snapshot.data == false) {
+                        return _buildPatrolCard(
+                          title: 'You have not patrolled today.',
+                          icon: Icons.warning,
+                          color: Colors.red,
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    }
+                  },
+                ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -90,7 +105,7 @@ class _HomeState extends State<Home> {
                       ),
                     ),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () => Get.toNamed('/history-presence'),
                       child: Text(
                         "See all",
                         style: GoogleFonts.poppins(
@@ -103,19 +118,64 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return MyCard(
-                  icon: IconType.CheckIn,
-                  title: "Check-In Title",
-                  subtitle: "Check-In Subtitle",
-                  time: "06:00 AM",
-                  status: "Done",
+          FutureBuilder<List<Attendance>>(
+            future: _attendanceFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
-              },
-            ),
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(
+                  child: Text('No history attendance data available.'),
+                );
+              } else {
+                List<Attendance> attendances = snapshot.data!;
+                List<Widget> cards = [];
+                int limit = 5;
+                int counter = 0;
+
+                for (var attendance in attendances) {
+                  if (counter >= limit) {
+                    break;
+                  }
+                  if (attendance.checkIn != null) {
+                    cards.add(
+                      MyCard(
+                        icon: IconType.CheckIn,
+                        title: "Check In",
+                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
+                        time: _formatTime(attendance.checkIn!),
+                        status: attendance.status,
+                      ),
+                    );
+                    counter++;
+                  }
+                  if (attendance.checkOut != null && counter < limit) {
+                    cards.add(
+                      MyCard(
+                        icon: IconType.CheckOut,
+                        title: "Check Out",
+                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
+                        time: _formatTime(attendance.checkOut!),
+                        status: attendance.status,
+                      ),
+                    );
+                    counter++;
+                  }
+                }
+
+                return Expanded(
+                  child: ListView(
+                    children: cards,
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
@@ -156,7 +216,8 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 3, bottom: 25),
-                  child: Text('${user.name}',
+                  child: Text(
+                    '${user.name}',
                     // child: Text('Fanidiya Tasya',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
@@ -245,6 +306,33 @@ class _HomeState extends State<Home> {
                   ),
                 ],
               ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPatrolCard({String title = '', IconData icon = Icons.error, Color color = Colors.black}) {
+    return Card(
+      margin: const EdgeInsets.all(20),
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              color: color,
+              size: 30,
+            ),
+            SizedBox(width: 10),
+            Text(
+              title,
+              style: GoogleFonts.poppins(fontSize: 15),
             ),
           ],
         ),

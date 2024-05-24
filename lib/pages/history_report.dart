@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patrol_track_mobile/components/header.dart';
 
-class History extends StatefulWidget {
+class HistoryReport extends StatefulWidget {
   @override
-  _HistoryState createState() => _HistoryState();
+  _HistoryReportState createState() => _HistoryReportState();
 }
 
-class _HistoryState extends State<History> {
+class _HistoryReportState extends State<HistoryReport> {
   Widget buildCard(String title, String description) {
     return ListTile(
       title: Text(

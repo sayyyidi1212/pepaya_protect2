@@ -3,6 +3,7 @@ import 'package:patrol_track_mobile/pages/auth/forgot_password.dart';
 import 'package:patrol_track_mobile/pages/auth/login.dart';
 import 'package:patrol_track_mobile/pages/auth/otp.dart';
 import 'package:patrol_track_mobile/pages/auth/reset_password.dart';
+import 'package:patrol_track_mobile/pages/history_presence.dart';
 import 'package:patrol_track_mobile/pages/menu_nav.dart';
 import 'package:patrol_track_mobile/pages/help_center.dart';
 import 'package:patrol_track_mobile/pages/permission.dart';
@@ -18,10 +19,9 @@ class RouteApp {
     
     GetPage(name: '/menu-nav', page: () => MenuNav()),
     GetPage(name: '/presensi', page: () => Presensi()),
-
+    GetPage(name: '/history-presence', page: () => HistoryPresence()),
     GetPage(name: '/scanner', page: () => Scanner()),
     GetPage(name: '/help-center', page: () => HelpCenter()),
     GetPage(name: '/permission', page: () => Permission())
-
   ];
 }

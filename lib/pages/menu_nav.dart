@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'schedule.dart';
-import 'history.dart';
+import 'history_report.dart';
 import 'setting.dart';
 import 'home.dart';
 
@@ -16,7 +16,7 @@ class _MenuNavState extends State<MenuNav> {
   final List<Widget> screens = [
     Home(),
     SchedulePage(),
-    History(),
+    HistoryReport(),
     Setting(),
   ];
   Widget currentScreen = Home();
