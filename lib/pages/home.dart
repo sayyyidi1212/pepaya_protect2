@@ -32,6 +32,7 @@ class _HomeState extends State<Home> {
     return format.format(dt);
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,56 +43,71 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Today",
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                TextButton(
-                  onPressed: () => Get.toNamed('/permission'),
-                  child: Text(
-                    "Apply for permission",
-                    style: GoogleFonts.poppins(
-                      color: Colors.red,
+                padding: EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Today",
+                      style: GoogleFonts.poppins(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              twoCard("Check In", "06:00 AM", "Go to Work", FontAwesomeIcons.signIn),
-              twoCard("Check Out", "02:00 PM", "Go Home", FontAwesomeIcons.signOut),
-            ],
-          ),
-                FutureBuilder<bool>(
-                  future: ReportController.checkTodayReport(context),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const SizedBox();
-                    } else if (snapshot.hasError) {
-                      return Text('Error: ${snapshot.error}');
-                    } else {
-                      if (snapshot.data == false) {
-                        return _buildPatrolCard(
-                          title: 'You have not patrolled today.',
-                          icon: Icons.warning,
+                    TextButton(
+                      onPressed: () => Get.toNamed('/permission'),
+                      child: Text("Apply for permission",
+                        style: GoogleFonts.poppins(
                           color: Colors.red,
-                        );
-                      } else {
-                        return SizedBox();
-                      }
-                    }
-                  },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
+              ),
+              FutureBuilder<List<Attendance>>(
+                future: AttendanceController.getToday(context),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    if (snapshot.data!.isEmpty) {
+                      return const SizedBox();
+                    } else {
+                      final start = snapshot.data![0].startTime;
+                      final end = snapshot.data![0].endTime;
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          twoCard("Check In", _formatTime(start), "Go to Work", FontAwesomeIcons.signIn),
+                          twoCard("Check Out", _formatTime(end), "Go Home", FontAwesomeIcons.signOut),
+                        ],
+                      );
+                    }
+                  }
+                },
+              ),
+              FutureBuilder<bool>(
+                future: ReportController.checkTodayReport(context),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    if (snapshot.data == false) {
+                      return _buildPatrolCard(
+                        title: 'You have not patrolled today.',
+                        icon: Icons.warning,
+                        color: Colors.red,
+                      );
+                    } else {
+                      return SizedBox();
+                    }
+                  }
+                },
+              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
@@ -148,9 +164,10 @@ class _HomeState extends State<Home> {
                       MyCard(
                         icon: IconType.CheckIn,
                         title: "Check In",
-                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
+                        subtitle:
+                            DateFormat('dd-MM-yyyy').format(attendance.date),
                         time: _formatTime(attendance.checkIn!),
-                        status: attendance.status,
+                        status: attendance.status ?? '',
                       ),
                     );
                     counter++;
@@ -160,9 +177,10 @@ class _HomeState extends State<Home> {
                       MyCard(
                         icon: IconType.CheckOut,
                         title: "Check Out",
-                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
+                        subtitle:
+                            DateFormat('dd-MM-yyyy').format(attendance.date),
                         time: _formatTime(attendance.checkOut!),
-                        status: attendance.status,
+                        status: attendance.status ?? '',
                       ),
                     );
                     counter++;
@@ -313,7 +331,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPatrolCard({String title = '', IconData icon = Icons.error, Color color = Colors.black}) {
+  Widget _buildPatrolCard(
+      {String title = '',
+      IconData icon = Icons.error,
+      Color color = Colors.black}) {
     return Card(
       margin: const EdgeInsets.all(20),
       child: Container(
