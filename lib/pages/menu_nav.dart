@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'schedule.dart';
-import 'history_report.dart';
+import 'report/history_report.dart';
 import 'setting.dart';
-import 'home.dart';
+import 'home/home.dart';
 
 class MenuNav extends StatefulWidget {
   @override
