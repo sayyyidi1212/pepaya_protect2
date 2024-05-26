@@ -12,7 +12,7 @@ class ReportController {
         bool reportedToday = await ReportService.todayReported(token);
         return reportedToday;
       } else {
-        throw Exception('Silahkan login terlebih dahulu');
+        throw Exception('Please login first.');
       }
     } catch (e) {
       print('Error while checking today\'s report: $e');

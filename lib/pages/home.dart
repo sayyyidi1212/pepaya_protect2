@@ -17,12 +17,15 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   DateTime today = DateTime.now();
   late Future<List<Attendance>> _attendanceFuture;
-  bool showAlert = true;
+  late Future<List<Attendance>> _todayAttendanceFuture;
+  late Future<bool> _todayReportFuture;
 
   @override
   void initState() {
     super.initState();
     _attendanceFuture = AttendanceController.getAttendanceHistory(context);
+    _todayAttendanceFuture = AttendanceController.getToday(context);
+    _todayReportFuture = ReportController.checkTodayReport(context);
   }
 
   String _formatTime(TimeOfDay time) {
@@ -31,7 +34,6 @@ class _HomeState extends State<Home> {
     final format = DateFormat.Hm();
     return format.format(dt);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,11 +45,12 @@ class _HomeState extends State<Home> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text("Today",
+                    Text(
+                      "Today",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
@@ -55,7 +58,8 @@ class _HomeState extends State<Home> {
                     ),
                     TextButton(
                       onPressed: () => Get.toNamed('/permission'),
-                      child: Text("Apply for permission",
+                      child: Text(
+                        "Apply for permission",
                         style: GoogleFonts.poppins(
                           color: Colors.red,
                         ),
@@ -65,7 +69,8 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<List<Attendance>>(
-                future: AttendanceController.getToday(context),
+                // future: AttendanceController.getToday(context),
+                future: _todayAttendanceFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox();
@@ -81,7 +86,7 @@ class _HomeState extends State<Home> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           twoCard("Check In", _formatTime(start), "Go to Work", FontAwesomeIcons.signIn),
-                          twoCard("Check Out", _formatTime(end), "Go Home", FontAwesomeIcons.signOut),
+                          twoCard("Check Out", _formatTime(end), "Go to Work", FontAwesomeIcons.signOut)
                         ],
                       );
                     }
@@ -89,7 +94,8 @@ class _HomeState extends State<Home> {
                 },
               ),
               FutureBuilder<bool>(
-                future: ReportController.checkTodayReport(context),
+                // future: ReportController.checkTodayReport(context),
+                future: _todayReportFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const SizedBox();
@@ -164,8 +170,7 @@ class _HomeState extends State<Home> {
                       MyCard(
                         icon: IconType.CheckIn,
                         title: "Check In",
-                        subtitle:
-                            DateFormat('dd-MM-yyyy').format(attendance.date),
+                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
                         time: _formatTime(attendance.checkIn!),
                         status: attendance.status ?? '',
                       ),
@@ -177,8 +182,7 @@ class _HomeState extends State<Home> {
                       MyCard(
                         icon: IconType.CheckOut,
                         title: "Check Out",
-                        subtitle:
-                            DateFormat('dd-MM-yyyy').format(attendance.date),
+                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
                         time: _formatTime(attendance.checkOut!),
                         status: attendance.status ?? '',
                       ),
@@ -234,8 +238,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 3, bottom: 25),
-                  child: Text(
-                    '${user.name}',
+                  child: Text('${user.name}',
                     // child: Text('Fanidiya Tasya',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
@@ -331,10 +334,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPatrolCard(
-      {String title = '',
-      IconData icon = Icons.error,
-      Color color = Colors.black}) {
+  Widget _buildPatrolCard({String title = '', IconData icon = Icons.error, Color color = Colors.black}) {
     return Card(
       margin: const EdgeInsets.all(20),
       child: Container(

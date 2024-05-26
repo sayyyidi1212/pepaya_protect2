@@ -13,7 +13,7 @@ class ScheduleController {
         List<Schedule> schedules = await ScheduleService.getSchedules(token);
         return schedules;
       } else {
-        throw Exception('Silahkan login terlebih dahulu');
+        throw Exception('Please login first.');
       }
     } catch (error) {
       showDialog(

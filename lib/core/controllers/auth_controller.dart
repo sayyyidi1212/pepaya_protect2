@@ -17,10 +17,11 @@ class AuthController {
         Get.toNamed('/menu-nav', arguments: user);
       }
     } catch (error) {
+      print(error.toString());
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
-        title: 'Gagal!',
+        title: 'Error!',
         text: error.toString(),
       );
     }
@@ -31,10 +32,11 @@ class AuthController {
       await AuthService.logout(prefs);
       Get.offAllNamed('/login');
     } catch (error) {
+      print(error.toString());
       QuickAlert.show(
         context: context,
         type: QuickAlertType.error,
-        title: 'Gagal Logout!',
+        title: 'Error!',
         text: error.toString(),
       );
     }
