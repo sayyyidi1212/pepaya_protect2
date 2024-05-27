@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patrol_track_mobile/components/header.dart';
+import 'package:patrol_track_mobile/core/controllers/report_controller.dart';
 
 class HistoryReport extends StatefulWidget {
   @override
@@ -8,13 +9,21 @@ class HistoryReport extends StatefulWidget {
 }
 
 class _HistoryReportState extends State<HistoryReport> {
-  Widget buildCard(String title, String description) {
+  late Future<List<dynamic>> _reports;
+
+  @override
+  void initState() {
+    super.initState();
+    _reports = ReportController.fetchReports(context);
+  }
+
+  Widget buildCard(String title, String subtitle) {
     return ListTile(
       title: Text(
         title,
         style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
       ),
-      subtitle: Text(description),
+      subtitle: Text(subtitle),
     );
   }
 
@@ -25,19 +34,29 @@ class _HistoryReportState extends State<HistoryReport> {
         children: [
           const Header(title: "History Activity"),
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                List<String> titles = ["Patrol 1", "Patrol 2", "Patrol 3"];
-                List<String> descriptions = [
-                  "Post 1 - Blok A",
-                  "Post 2 - Blok B",
-                  "Post 3 - Blok C"
-                ];
-                return Card(
-                  child: buildCard(titles[index % titles.length],
-                      descriptions[index % descriptions.length]),
-                );
+            child: FutureBuilder<List<dynamic>>(
+              future: _reports,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No reports available.'));
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      var report = snapshot.data![index];
+                      String title = report['title'] ?? 'No Title';
+                      String subtitle = report['subtitle'] ?? 'No Subtitle';
+
+                      return Card(
+                        child: buildCard(title, subtitle),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),

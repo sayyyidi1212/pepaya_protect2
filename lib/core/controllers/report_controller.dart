@@ -19,4 +19,19 @@ class ReportController {
       return false;
     }
   }
+  static Future<List<dynamic>> fetchReports(BuildContext context) async {
+    try {
+      String? token = await Constant.getToken();
+
+      if (token != null) {
+        List<dynamic> reports = await ReportService.getReports(token);
+        return reports;
+      } else {
+        throw Exception('Please login first.');
+      }
+    } catch (e) {
+      print('Error while fetching reports: $e');
+      return [];
+    }
+  }
 }
