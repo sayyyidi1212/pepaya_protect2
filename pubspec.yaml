@@ -41,9 +41,7 @@ dependencies:
   shared_preferences: ^2.0.0
   table_calendar: ^3.1.1
   flutter_svg: ^2.0.10
-  cloudinary: ^1.2.0
   image_picker: ^0.8.4+5
-  cloudinary_public: ^0.23.1
   # file_picker: ^4.0.0
 
 dev_dependencies:

@@ -1,11 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class Report extends StatefulWidget {
   final String scanData;
@@ -22,8 +21,7 @@ class _ReportState extends State<Report> {
   String _status = 'Aman';
   late String _currentTime;
   final ImagePicker _picker = ImagePicker();
-  XFile? _imageFile;
-  final cloudinary = CloudinaryPublic('df3wkm3n3', 'your_upload_preset', cache: false);
+  List<XFile> _imageFiles = [];
 
   @override
   void initState() {
@@ -40,76 +38,47 @@ class _ReportState extends State<Report> {
     Future.delayed(Duration(seconds: 1), _updateTime);
   }
 
-  // Future<void> _pickImage() async {
-  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-  //   setState(() {
-  //     _imageFile = pickedFile;
-  //   });
-
-  //   if (pickedFile != null) {
-  //     await _uploadImageToCloudinary(pickedFile);
-  //   }
-  // }
-
-  Future<void> _pickImage() async {
-  final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-
-  setState(() {
-    _imageFile = pickedFile;
-  });
-
-  if (pickedFile != null) {
-    await _uploadImageToCloudinary(pickedFile);
-  }
-  }
-
-
-  Future<void> _uploadImageToCloudinary(XFile imageFile) async {
-    try {
-      CloudinaryResponse response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(imageFile.path, resourceType: CloudinaryResourceType.Image),
-      );
-      print('Image uploaded: ${response.secureUrl}');
-      await _saveImageUrlToDatabase(response.secureUrl);
-    } catch (e) {
-      print('Image upload failed: $e');
+  void _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFiles.add(pickedFile);
+      });
     }
   }
 
-  
-  Future<void> _saveImageUrlToDatabase(String imageUrl) async {
-  final url = Uri.parse('http://patroltrack.my.id/api/save-image-url'); // Ganti dengan URL endpoint backend Anda
-  try {
-    final response = await http.post(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-      body: jsonEncode(<String, String>{
-        'imageUrl': imageUrl,
-        'notes': _notesController.text,
-        'status': _status,
-        'scanData': widget.scanData,
-        'timestamp': _currentTime,
-      }),
-    );
+  void _removeImage(int index) {
+    setState(() {
+      _imageFiles.removeAt(index);
+    });
+  }
 
-    if (response.statusCode == 200) {
-      print('Image URL saved to database successfully');
+  void _submitFormPatroli() async {
+    if (_imageFiles.isEmpty) {
+      // Handle if no image is selected
+      return;
+    }
+
+    final uri = Uri.parse('http://patroltrack.my.id/report/store');
+    var request = http.MultipartRequest('POST', uri)
+      ..fields['location_id'] = widget.scanData
+      ..fields['status'] = _status
+      ..fields['description'] = _notesController.text;
+
+    for (var imageFile in _imageFiles) {
+      request.files.add(await http.MultipartFile.fromPath('attachment[]', imageFile.path));
+    }
+
+    // Tambahkan autentikasi jika perlu, misalnya token
+    // request.headers['Authorization'] = 'Bearer YOUR_TOKEN';
+
+    var response = await request.send();
+
+    if (response.statusCode == 201) {
+      Get.toNamed('/menu-nav');
     } else {
-      print('Failed to save image URL to database');
+      // Handle error
     }
-  } catch (e) {
-    print('Error: $e');
-  }
-}
-
-  
-
-  void _submitFormPatroli() {
-    // Handle form submission
-    Get.toNamed('/menu-nav');
   }
 
   @override
@@ -143,26 +112,21 @@ class _ReportState extends State<Report> {
                   ),
                 ),
               ),
-              Text(
-                "Lokasi",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF5F5C5C)),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-                  child: Text(
-                    widget.scanData,
-                    style: TextStyle(fontSize: 14),
-                    textAlign: TextAlign.start,
+              Visibility(
+                visible: false,
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Color(0xFF5F5C5C)),
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                    padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+                    child: Text(
+                      widget.scanData,
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.start,
+                    ),
                   ),
                 ),
               ),
@@ -248,6 +212,38 @@ class _ReportState extends State<Report> {
                     ],
                   ),
                 ),
+              ),
+              SizedBox(height: 10),
+              Wrap(
+                spacing: 10,
+                runSpacing: 10,
+                children: _imageFiles.map((imageFile) {
+                  int index = _imageFiles.indexOf(imageFile);
+                  return Stack(
+                    children: [
+                      Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF5F5C5C)),
+                          borderRadius: BorderRadius.circular(5.0),
+                          image: DecorationImage(
+                            image: FileImage(File(imageFile.path)),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: -10,
+                        left: 25,
+                        child: IconButton(
+                          icon: Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => _removeImage(index),
+                        ),
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
               SizedBox(height: 30),
               Container(
