@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patrol_track_mobile/core/models/report.dart';
 import 'package:patrol_track_mobile/core/services/report_service.dart';
 import 'package:patrol_track_mobile/core/utils/constant.dart';
 
@@ -19,12 +20,13 @@ class ReportController {
       return false;
     }
   }
-  static Future<List<dynamic>> fetchReports(BuildContext context) async {
+
+  static Future<List<Report>> getReportHistory(BuildContext context) async {
     try {
       String? token = await Constant.getToken();
 
       if (token != null) {
-        List<dynamic> reports = await ReportService.getReports(token);
+        List<Report> reports = await ReportService.getAllReports(token);
         return reports;
       } else {
         throw Exception('Please login first.');

@@ -5,6 +5,7 @@ import 'package:patrol_track_mobile/core/models/attendance.dart';
 import 'package:patrol_track_mobile/core/utils/Constant.dart';
 
 class AttendanceService {
+  
   static Future<List<Attendance>> getAllAttendances(String token) async {
     final url = Uri.parse('${Constant.BASE_URL}/history-presence');
     final response = await http.get(

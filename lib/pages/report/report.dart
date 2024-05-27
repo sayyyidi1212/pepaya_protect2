@@ -6,16 +6,16 @@ import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 
-class Report extends StatefulWidget {
+class ReportPage extends StatefulWidget {
   final String scanData;
 
-  Report({required this.scanData});
+  ReportPage({required this.scanData});
 
   @override
-  _ReportState createState() => _ReportState();
+  _ReportPageState createState() => _ReportPageState();
 }
 
-class _ReportState extends State<Report> {
+class _ReportPageState extends State<ReportPage> {
   late TextEditingController _resultController;
   late TextEditingController _notesController;
   String _status = 'Aman';

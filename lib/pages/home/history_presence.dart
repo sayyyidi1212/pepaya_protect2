@@ -19,7 +19,7 @@ class _HistoryPresenceState extends State<HistoryPresence> {
     _attendanceFuture = AttendanceController.getAttendanceHistory(context);
   }
 
-    String _formatTime(TimeOfDay time) {
+  String _formatTime(TimeOfDay time) {
     final now = DateTime.now();
     final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
     final format = DateFormat.Hm();
@@ -82,7 +82,6 @@ class _HistoryPresenceState extends State<HistoryPresence> {
                     counter++;
                   }
                 }
-
                 return Expanded(
                   child: ListView(
                     children: cards,

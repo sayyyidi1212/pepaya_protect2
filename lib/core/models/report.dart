@@ -1,34 +1,34 @@
-import 'package:flutter/material.dart';
-
-class ReportModels {
+class Report {
   final int id;
-  final int location_id;
-  final DateTime created_at;
-  final String? status;
+  final int guardId;
+  final int locationId;
+  final String locationName;
+  final String status;
+  final String description;
+  final String attachment;
+  final DateTime createdAt;
 
-  ReportModels({
+  Report({
     required this.id,
-    required this.location_id,
-    required this.created_at,
-    this.status,
+    required this.guardId,
+    required this.locationId,
+    required this.locationName,
+    required this.status,
+    required this.description,
+    required this.attachment,
+    required this.createdAt,
   });
 
-  factory ReportModels.fromJson(Map<String, dynamic> json) {
-    return ReportModels(
+  factory Report.fromJson(Map<String, dynamic> json) {
+    return Report(
       id: json['id'],
-      location_id: json['location_id'],
-      created_at: (json['created_at'])!,
-      status: json['status'] as String?,
+      guardId: json['guard_id'],
+      locationId: json['location_id'],
+      locationName: json['location_name'],
+      status: json['status'],
+      description: json['description'],
+      attachment: json['attachment'],
+      createdAt: DateTime.parse(json['created_at']).toLocal(),
     );
-  }
-
-  static TimeOfDay? _parseTimeOfDay(String? timeString) {
-    if (timeString != null) {
-      final parts = timeString.split(':');
-      final hour = int.parse(parts[0]);
-      final minute = int.parse(parts[1]);
-      return TimeOfDay(hour: hour, minute: minute);
-    }
-    return null;
   }
 }

@@ -32,7 +32,7 @@ class Background extends StatelessWidget {
           children: <Widget>[
             const SizedBox(height: 80),
             Padding(
-              padding: EdgeInsets.all(20),
+              padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -45,7 +45,7 @@ class Background extends StatelessWidget {
                   ),
                   Text(subtitle,
                     style: GoogleFonts.poppins(
-                      color: Color(0xFFABBAC8),
+                      color: const Color(0xFFABBAC8),
                       fontSize: 18,
                       fontWeight: FontWeight.w500,
                     ),
