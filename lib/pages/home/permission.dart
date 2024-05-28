@@ -4,45 +4,32 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
+import 'package:patrol_track_mobile/components/button.dart';
 import 'package:patrol_track_mobile/components/header.dart';
+import 'package:patrol_track_mobile/core/controllers/permission_controller.dart';
 
-class Permission extends StatefulWidget {
+class PermissionPage extends StatefulWidget {
   @override
-  _PermissionState createState() => _PermissionState();
+  _PermissionPageState createState() => _PermissionPageState();
 }
 
-class _PermissionState extends State<Permission> {
-  late DateTime _selectedDate;
-  final TextEditingController _descriptionController = TextEditingController();
+class _PermissionPageState extends State<PermissionPage> {
+  final TextEditingController date = TextEditingController();
+  final TextEditingController reason = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  List<XFile> _imageFiles = [];
-  bool _isPermissionTypeValid = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDate = DateTime.now();
-  }
+  final List<XFile> _imageFiles = [];
+  final List<String> _imagePaths = [];
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(2020),
-      lastDate: DateTime(2100),
-      builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light(),
-          child: child!,
-        );
-      },
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
-
-    if (picked != null && picked != _selectedDate) {
+    if (picked != null) {
       setState(() {
-        _selectedDate = picked;
+        date.text = DateFormat('dd MMMM yyyy').format(picked);
       });
     }
   }
@@ -52,6 +39,7 @@ class _PermissionState extends State<Permission> {
     if (pickedFile != null) {
       setState(() {
         _imageFiles.add(pickedFile);
+        _imagePaths.add(pickedFile.path); // Tambahkan path ke dalam _imagePaths
       });
     }
   }
@@ -59,50 +47,12 @@ class _PermissionState extends State<Permission> {
   void _removeImage(int index) {
     setState(() {
       _imageFiles.removeAt(index);
+      _imagePaths.removeAt(index); // Hapus path dari dalam _imagePaths
     });
-  }
-
-  Future<void> _submitForm() async {
-    if (_descriptionController.text.isEmpty || _imageFiles.isEmpty) {
-      // Handle form validation errors
-      return;
-    }
-
-    final uri = Uri.parse('http://patroltrack.my.id/permission');
-    var request = http.MultipartRequest('POST', uri)
-      ..fields['permission_date'] = _selectedDate.toIso8601String()
-      ..fields['reason'] = _descriptionController.text;
-
-    for (var imageFile in _imageFiles) {
-      request.files.add(await http.MultipartFile.fromPath(
-        'information[]',
-        imageFile.path,
-        filename: basename(imageFile.path),
-      ));
-    }
-
-    // Tambahkan autentikasi jika perlu, misalnya token
-    // request.headers['Authorization'] = 'Bearer YOUR_TOKEN';
-
-    var response = await request.send();
-
-    if (response.statusCode == 201) {
-      Get.toNamed('/menu-nav');
-    } else {
-      // Handle error
-    }
-  }
-
-  @override
-  void dispose() {
-    _descriptionController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    String formattedDate = DateFormat('dd MMMM yyyy').format(_selectedDate);
-
     return Scaffold(
       body: Column(
         children: [
@@ -111,8 +61,7 @@ class _PermissionState extends State<Permission> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  _buildDateSelector(formattedDate),
-                  _buildPermissionForm(),
+                  _buildForm(),
                 ],
               ),
             ),
@@ -122,72 +71,61 @@ class _PermissionState extends State<Permission> {
     );
   }
 
-  Widget _buildDateSelector(String formattedDate) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20.0, 30.0, 20.0, 0.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Container(
-              height: 40,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.3),
-                    spreadRadius: 2,
-                    blurRadius: 5,
-                  ),
-                ],
-              ),
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.calendar_month_outlined),
-                    onPressed: () => _selectDate(context as BuildContext),
-                    color: Colors.blue.shade900,
-                  ),
-                  Text(
-                    formattedDate,
-                    style: GoogleFonts.poppins(fontSize: 13),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPermissionForm() {
+  Widget _buildForm() {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
-          Text(
-            "Keterangan",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-          SizedBox(height: 10),
-          TextFormField(
-            controller: _descriptionController,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-            ),
-            maxLines: 3,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Tanggal Izin",
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: date,
+                readOnly: true,
+                decoration: InputDecoration(
+                  border: const OutlineInputBorder(),
+                  suffixIcon: GestureDetector(
+                    onTap: () => _selectDate(context),
+                    child: const Icon(Icons.calendar_month_outlined),
+                  ),
+                ),
+                onTap: () => _selectDate(context),
+              ),
+            ],
           ),
           SizedBox(height: 20),
-          Row(
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(width: 10),
+              Text(
+                "Alasan",
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              SizedBox(height: 10),
+              TextFormField(
+                controller: reason,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Column(
+            children: [
               Text(
                 "Unggah Bukti",
                 style: GoogleFonts.poppins(
@@ -209,7 +147,7 @@ class _PermissionState extends State<Permission> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.camera_alt),
+                  const Icon(Icons.camera_alt),
                   SizedBox(width: 10),
                   Text(
                     "Pilih File",
@@ -245,7 +183,7 @@ class _PermissionState extends State<Permission> {
                     bottom: -10,
                     left: 25,
                     child: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
+                      icon: const Icon(Icons.delete, color: Colors.red),
                       onPressed: () => _removeImage(index),
                     ),
                   ),
@@ -254,26 +192,12 @@ class _PermissionState extends State<Permission> {
             }).toList(),
           ),
           SizedBox(height: 20),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 50),
-            child: ElevatedButton(
-              onPressed: _submitForm,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF305E8B),
-                minimumSize: Size(double.infinity, 50),
-                padding: EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-              child: Text(
-                "Kirim",
-                style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+          MyButton(
+            text: "Kirim",
+            onPressed: () {
+              Get.toNamed('/menu-nav');
+              // PermissionController.postPermission(context, date.text, reason, _imagePaths);
+            },
           ),
         ],
       ),

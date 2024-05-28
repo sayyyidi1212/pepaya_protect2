@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
+import 'package:patrol_track_mobile/components/header.dart';
 
 class ReportPage extends StatefulWidget {
   final String scanData;
@@ -69,9 +70,6 @@ class _ReportPageState extends State<ReportPage> {
       request.files.add(await http.MultipartFile.fromPath('attachment[]', imageFile.path));
     }
 
-    // Tambahkan autentikasi jika perlu, misalnya token
-    // request.headers['Authorization'] = 'Bearer YOUR_TOKEN';
-
     var response = await request.send();
 
     if (response.statusCode == 201) {
@@ -91,185 +89,187 @@ class _ReportPageState extends State<ReportPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Laporan Patroli', style: TextStyle(color: Colors.white)),
-        backgroundColor: Color(0xFF356899),
-        iconTheme: IconThemeData(color: Colors.white),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Center(
-                  child: Text(
-                    _currentTime,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-              ),
-              Visibility(
-                visible: false,
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF5F5C5C)),
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
-                    child: Text(
-                      widget.scanData,
-                      style: TextStyle(fontSize: 14),
-                      textAlign: TextAlign.start,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10.0),
-              Text(
-                "Status Lokasi",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 10),
-              SizedBox(
-                width: double.infinity,
-                child: Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF5F5C5C)),
-                    borderRadius: BorderRadius.circular(5.0),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
-                  child: DropdownButton<String>(
-                    value: _status,
-                    isExpanded: true,
-                    items: <String>['Aman', 'Tidak Aman'].map((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(value),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _status = newValue!;
-                      });
-                    },
-                    underline: Container(),
-                  ),
-                ),
-              ),
-              SizedBox(height: 16.0),
-              Text(
-                "Catatan Patroli",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 10),
-              TextField(
-                controller: _notesController,
-                maxLines: 4,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 20),
-              Text(
-                "Unggah Bukti",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              SizedBox(height: 10),
-              InkWell(
-                onTap: _pickImage,
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Color(0xFF5F5C5C)),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.camera_alt),
-                      SizedBox(width: 10),
-                      Text(
-                        "Pilih File",
-                        style: GoogleFonts.poppins(
-                          fontWeight: FontWeight.bold,
+      body: Column(
+        children: [
+          const Header(title: "Report", backButton: true),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Center(
+                        child: Text(
+                          _currentTime,
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: 10),
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                children: _imageFiles.map((imageFile) {
-                  int index = _imageFiles.indexOf(imageFile);
-                  return Stack(
-                    children: [
-                      Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Color(0xFF5F5C5C)),
-                          borderRadius: BorderRadius.circular(5.0),
-                          image: DecorationImage(
-                            image: FileImage(File(imageFile.path)),
-                            fit: BoxFit.cover,
+                    ),
+                    Visibility(
+                      visible: false,
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Color(0xFF5F5C5C)),
+                            borderRadius: BorderRadius.circular(5.0),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 10.0),
+                          child: Text(
+                            widget.scanData,
+                            style: TextStyle(fontSize: 14),
+                            textAlign: TextAlign.start,
                           ),
                         ),
                       ),
-                      Positioned(
-                        bottom: -10,
-                        left: 25,
-                        child: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red),
-                          onPressed: () => _removeImage(index),
+                    ),
+                    SizedBox(height: 10.0),
+                    Text(
+                      "Status Lokasi",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF5F5C5C)),
+                          borderRadius: BorderRadius.circular(5.0),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                        child: DropdownButton<String>(
+                          value: _status,
+                          isExpanded: true,
+                          items: <String>['Aman', 'Tidak Aman'].map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              _status = newValue!;
+                            });
+                          },
+                          underline: Container(),
                         ),
                       ),
-                    ],
-                  );
-                }).toList(),
-              ),
-              SizedBox(height: 30),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 50),
-                child: ElevatedButton(
-                  onPressed: _submitFormPatroli,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF305E8B),
-                    minimumSize: Size(double.infinity, 50),
-                    padding: EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
                     ),
-                  ),
-                  child: Text(
-                    "Kirim",
-                    style: GoogleFonts.poppins(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                    SizedBox(height: 16.0),
+                    Text(
+                      "Catatan Patroli",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
-                  ),
+                    SizedBox(height: 10),
+                    TextField(
+                      controller: _notesController,
+                      maxLines: 4,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Unggah Bukti",
+                      style: GoogleFonts.poppins(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    InkWell(
+                      onTap: _pickImage,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFF5F5C5C)),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.camera_alt),
+                            SizedBox(width: 10),
+                            Text(
+                              "Pilih File",
+                              style: GoogleFonts.poppins(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 10,
+                      children: _imageFiles.map((imageFile) {
+                        int index = _imageFiles.indexOf(imageFile);
+                        return Stack(
+                          children: [
+                            Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: Color(0xFF5F5C5C)),
+                                borderRadius: BorderRadius.circular(5.0),
+                                image: DecorationImage(
+                                  image: FileImage(File(imageFile.path)),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: -10,
+                              left: 25,
+                              child: IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: () => _removeImage(index),
+                              ),
+                            ),
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    SizedBox(height: 30),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 50),
+                      child: ElevatedButton(
+                        onPressed: _submitFormPatroli,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Color(0xFF305E8B),
+                          minimumSize: Size(double.infinity, 50),
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text(
+                          "Kirim",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

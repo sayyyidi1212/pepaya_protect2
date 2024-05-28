@@ -22,6 +22,6 @@ class RouteApp {
     GetPage(name: '/history-presence', page: () => HistoryPresence()),
     GetPage(name: '/scanner', page: () => Scanner()),
     GetPage(name: '/help-center', page: () => HelpCenter()),
-    GetPage(name: '/permission', page: () => Permission())
+    GetPage(name: '/permission', page: () => PermissionPage())
   ];
 }

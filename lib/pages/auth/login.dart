@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:patrol_track_mobile/components/background_auth.dart';
 import 'package:patrol_track_mobile/components/button.dart';
-import 'package:patrol_track_mobile/components/text_field.dart';
+import 'package:patrol_track_mobile/components/textfield_auth.dart';
 import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
 
 class Login extends StatefulWidget {
