@@ -5,7 +5,6 @@ import 'package:patrol_track_mobile/core/utils/Constant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthService {
-
   static Future<User?> login(String email, String password) async {
     final url = Uri.parse('${Constant.BASE_URL}/login');
     final response = await http.post(
@@ -34,6 +33,20 @@ class AuthService {
           'Authorization': '$token',
         },
       );
+    }
+  }
+
+  static Future<User> getUser(String token) async {
+    final url = Uri.parse('${Constant.BASE_URL}/get-user');
+    final response = await http.get(
+      url,
+      headers: {'Authorization': '$token'},
+    );
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body);
+      return User.fromJson(result['data']);
+    } else {
+      throw Exception('Failed to load user data');
     }
   }
 }

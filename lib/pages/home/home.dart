@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:patrol_track_mobile/components/history_card.dart';
 import 'package:patrol_track_mobile/core/controllers/attendance_controller.dart';
+import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
 import 'package:patrol_track_mobile/core/controllers/report_controller.dart';
 import 'package:patrol_track_mobile/core/models/attendance.dart';
 import 'package:patrol_track_mobile/core/models/user.dart';
@@ -16,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   DateTime today = DateTime.now();
+  late Future<User> _userFuture;
   late Future<List<Attendance>> _attendanceFuture;
   late Future<List<Attendance>> _todayAttendanceFuture;
   late Future<bool> _todayReportFuture;
@@ -23,6 +25,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    _userFuture = AuthController.fetchUser(context);
     _attendanceFuture = AttendanceController.getAttendanceHistory(context);
     _todayAttendanceFuture = AttendanceController.getToday(context);
     _todayReportFuture = ReportController.checkTodayReport(context);
@@ -40,7 +43,15 @@ class _HomeState extends State<Home> {
     return Scaffold(
       body: Column(
         children: [
-          _headerHome(),
+          FutureBuilder<User>(
+            future: _userFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return _headerHome(snapshot.data!);
+              } else
+                return Container();
+            },
+          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -69,7 +80,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
               FutureBuilder<List<Attendance>>(
-                // future: AttendanceController.getToday(context),
                 future: _todayAttendanceFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -94,7 +104,6 @@ class _HomeState extends State<Home> {
                 },
               ),
               FutureBuilder<bool>(
-                // future: ReportController.checkTodayReport(context),
                 future: _todayReportFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -204,9 +213,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _headerHome() {
-    final User user = Get.arguments as User;
-
+  Widget _headerHome(User user) {
     return Container(
       padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 5),
       decoration: const BoxDecoration(
@@ -334,7 +341,10 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildPatrolCard({String title = '', IconData icon = Icons.error, Color color = Colors.black}) {
+  Widget _buildPatrolCard(
+      {String title = '',
+      IconData icon = Icons.error,
+      Color color = Colors.black}) {
     return Card(
       margin: const EdgeInsets.all(20),
       child: Container(
