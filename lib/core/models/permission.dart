@@ -1,7 +1,9 @@
+import 'dart:io';
+
 class Permission {
   final String permissionDate;
   final String reason;
-  final List<String> information;
+  final File? information;
 
   Permission({
     required this.permissionDate,
@@ -13,7 +15,7 @@ class Permission {
     return Permission(
       permissionDate: json['permission_date'],
       reason: json['reason'],
-      information: List<String>.from(json['information']),
+      information: json['information'] != null ? File(json['information']) : null,
     );
   }
 
@@ -21,7 +23,7 @@ class Permission {
     return {
       'permission_date': permissionDate,
       'reason': reason,
-      'information': information,
+      'information': information != null ? information!.path : null,
     };
   }
 }

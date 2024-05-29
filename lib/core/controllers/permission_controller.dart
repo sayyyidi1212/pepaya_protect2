@@ -1,30 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:patrol_track_mobile/core/models/permission.dart';
 import 'package:patrol_track_mobile/core/services/permission_service.dart';
-import 'package:image_picker/image_picker.dart'; // Import ImagePicker
+import 'package:patrol_track_mobile/core/utils/constant.dart';
+import 'package:quickalert/quickalert.dart';
 
 class PermissionController {
 
-  static Future<void> postPermission(BuildContext context, String token, TextEditingController date, TextEditingController reason) async {
-    final picker = ImagePicker(); // Buat instance ImagePicker
-
-    List<String> imagePaths = []; // Buat list untuk menyimpan path file gambar yang akan diunggah
-
+  static Future<void> createPermission(BuildContext context, Permission permission) async {
     try {
-      // Ambil gambar dari galeri
-      final pickedFile = await picker.getImage(source: ImageSource.gallery);
-      if (pickedFile != null) {
-        imagePaths.add(pickedFile.path); // Tambahkan path file gambar ke dalam list
-      }
+      String? token = await Constant.getToken();
 
-      bool success = await PermissionService.postPermission(token, date.text, reason.text, imagePaths);
-      if (success) {
-        print('Permission created successfully');
-        Get.toNamed('/menu-nav');
-      } else {
-        print('Failed to create permission');
+      if (token != null) {
+        bool success = await PermissionService.postPermission(token, permission);
+        if (success) {
+          QuickAlert.show(
+            context: context, 
+            type: QuickAlertType.success,
+            title: 'Success!',
+            text: 'Permission created successfully',
+            onConfirmBtnTap: () {
+              Navigator.of(context).pop();
+              Get.toNamed('/menu-nav');
+            },
+          );
+          return;
+        }
       }
     } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('$error'),
+          backgroundColor: Colors.red,
+        ),
+      );
       print('Error: $error');
     }
   }

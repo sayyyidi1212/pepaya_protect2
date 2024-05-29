@@ -1,12 +1,12 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:patrol_track_mobile/components/button.dart';
 import 'package:patrol_track_mobile/components/header.dart';
 import 'package:patrol_track_mobile/core/controllers/permission_controller.dart';
+import 'package:patrol_track_mobile/core/models/permission.dart';
 
 class PermissionPage extends StatefulWidget {
   @override
@@ -17,8 +17,7 @@ class _PermissionPageState extends State<PermissionPage> {
   final TextEditingController date = TextEditingController();
   final TextEditingController reason = TextEditingController();
   final ImagePicker _picker = ImagePicker();
-  final List<XFile> _imageFiles = [];
-  final List<String> _imagePaths = [];
+  File? _imageFile;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -29,7 +28,7 @@ class _PermissionPageState extends State<PermissionPage> {
     );
     if (picked != null) {
       setState(() {
-        date.text = DateFormat('dd MMMM yyyy').format(picked);
+        date.text = DateFormat('yyyy-MM-dd').format(picked);
       });
     }
   }
@@ -38,16 +37,14 @@ class _PermissionPageState extends State<PermissionPage> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        _imageFiles.add(pickedFile);
-        _imagePaths.add(pickedFile.path); // Tambahkan path ke dalam _imagePaths
+        _imageFile = File(pickedFile.path);
       });
     }
   }
 
-  void _removeImage(int index) {
+  void _removeImage() {
     setState(() {
-      _imageFiles.removeAt(index);
-      _imagePaths.removeAt(index); // Hapus path dari dalam _imagePaths
+      _imageFile = null;
     });
   }
 
@@ -139,7 +136,7 @@ class _PermissionPageState extends State<PermissionPage> {
           InkWell(
             onTap: _pickImage,
             child: Container(
-              padding: EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(10),
@@ -160,45 +157,45 @@ class _PermissionPageState extends State<PermissionPage> {
             ),
           ),
           SizedBox(height: 10),
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: _imageFiles.map((imageFile) {
-              int index = _imageFiles.indexOf(imageFile);
-              return Stack(
-                children: [
-                  Container(
-                    width: 100,
-                    height: 100,
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFF5F5C5C)),
-                      borderRadius: BorderRadius.circular(5.0),
-                      image: DecorationImage(
-                        image: FileImage(File(imageFile.path)),
-                        fit: BoxFit.cover,
+          _imageFile != null
+              ? Stack(
+                  children: [
+                    Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Color(0xFF5F5C5C)),
+                        borderRadius: BorderRadius.circular(5.0),
+                        image: DecorationImage(
+                          image: FileImage(_imageFile!),
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    bottom: -10,
-                    left: 25,
-                    child: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _removeImage(index),
+                    Positioned(
+                      bottom: -10,
+                      left: 25,
+                      child: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: _removeImage,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }).toList(),
-          ),
+                  ],
+                )
+              : SizedBox(),
           SizedBox(height: 20),
           MyButton(
-            text: "Kirim",
-            onPressed: () {
-              Get.toNamed('/menu-nav');
-              // PermissionController.postPermission(context, date.text, reason, _imagePaths);
-            },
-          ),
+              text: "Kirim",
+              onPressed: () {
+                Permission permission = Permission(
+                  permissionDate: date.text,
+                  reason: reason.text,
+                  information: _imageFile,
+                );
+
+                PermissionController.createPermission(context, permission);
+              },
+            ),
         ],
       ),
     );

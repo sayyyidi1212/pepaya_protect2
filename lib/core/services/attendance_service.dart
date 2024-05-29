@@ -12,12 +12,8 @@ class AttendanceService {
       url,
       headers: {'Authorization': '$token'},
     );
-    // print('response status: ${response.statusCode}');
-    // print('response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
-      // print(result);
       List<Attendance> attendances = List<Attendance>.from(
         result['data'].map(
           (attendances) => Attendance.fromJson(attendances),
@@ -38,7 +34,6 @@ class AttendanceService {
 
     if (response.statusCode == 200) {
       final result = jsonDecode(response.body);
-      print(result);
       List<Attendance> attendances = List<Attendance>.from(
         result['data'].map(
           (attendances) => Attendance.fromJson(attendances),
