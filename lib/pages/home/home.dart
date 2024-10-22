@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'package:patrol_track_mobile/pages/home/gallery.dart'; 
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -85,7 +85,7 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _diseaseDetectionSection() {
+Widget _diseaseDetectionSection() {
   return Container(
     padding: const EdgeInsets.all(15.0),
     child: Column(
@@ -95,31 +95,37 @@ class _HomeState extends State<Home> {
           'Deteksi Penyakit Buah Pepaya',
           style: GoogleFonts.poppins(
             fontSize: 20,
-            fontWeight: FontWeight.w700, // Menggunakan berat huruf yang lebih tebal
-            color: Colors.green.shade800, // Mengubah warna teks
+            fontWeight: FontWeight.w700,
+            color: Colors.green.shade800,
           ),
         ),
         const SizedBox(height: 10),
         Text(
           'Ikuti langkah-langkah berikut untuk mendeteksi penyakit:',
-          style: GoogleFonts.poppins(fontSize: 14, color: Colors.black54), // Mengubah warna teks
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.black54),
         ),
         const SizedBox(height: 10),
         _stepsSection(),
-        const SizedBox(height: 20), // Menambahkan jarak lebih untuk tombol
-        Center( // Menambahkan Center di sini
+        const SizedBox(height: 20),
+        Center(
           child: ElevatedButton.icon(
             onPressed: () {
-              // Tambahkan fungsi untuk mengunggah gambar dan memulai deteksi penyakit
+              // Navigasi ke halaman gallery.dart
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => GalleryPage(), // Halaman gallery.dart yang diimplementasikan
+                ),
+              );
             },
-            icon: const Icon(Icons.upload_file), // Menambahkan ikon ke tombol
+            icon: const Icon(Icons.upload_file),
             label: const Text('Unggah Gambar'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green[700], // Mengubah warna tombol
-              foregroundColor: Colors.white, // Mengubah warna teks tombol
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Mengubah padding
+              backgroundColor: Colors.green[700],
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(60), // Membuat tombol lebih melengkung
+                borderRadius: BorderRadius.circular(60),
               ),
             ),
           ),
@@ -128,6 +134,7 @@ class _HomeState extends State<Home> {
     ),
   );
 }
+
 
 
   Widget _stepsSection() {

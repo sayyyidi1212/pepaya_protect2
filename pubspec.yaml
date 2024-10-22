@@ -44,6 +44,8 @@ dependencies:
   quickalert: ^1.1.0
   shared_preferences: ^2.0.0
   table_calendar: ^3.1.1
+  #gallery_saver: ^2.3.2 # Tambahkan ini
+
  
 
 dev_dependencies:

@@ -6,9 +6,8 @@ import 'package:patrol_track_mobile/pages/auth/reset_password.dart';
 import 'package:patrol_track_mobile/pages/home/history_presence.dart';
 import 'package:patrol_track_mobile/pages/menu_nav.dart';
 import 'package:patrol_track_mobile/pages/help_center.dart';
-
 import 'package:patrol_track_mobile/pages/report/scanner.dart';
-
+import 'package:patrol_track_mobile/pages/home/gallery.dart'; 
 
 class RouteApp {
   static final pages = [
@@ -22,5 +21,7 @@ class RouteApp {
     GetPage(name: '/scanner', page: () => Scanner()),
     GetPage(name: '/help-center', page: () => HelpCenter()),
     
+    // Route untuk halaman gallery
+    GetPage(name: '/gallery', page: () => const GalleryPage()), 
   ];
 }
