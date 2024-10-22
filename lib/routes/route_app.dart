@@ -6,9 +6,9 @@ import 'package:patrol_track_mobile/pages/auth/reset_password.dart';
 import 'package:patrol_track_mobile/pages/home/history_presence.dart';
 import 'package:patrol_track_mobile/pages/menu_nav.dart';
 import 'package:patrol_track_mobile/pages/help_center.dart';
-import 'package:patrol_track_mobile/pages/home/permission.dart';
+
 import 'package:patrol_track_mobile/pages/report/scanner.dart';
-import 'package:patrol_track_mobile/pages/home/presensi.dart';
+
 
 class RouteApp {
   static final pages = [
@@ -18,10 +18,9 @@ class RouteApp {
     GetPage(name: '/reset-pass', page: () => const ResetPassword()),
     
     GetPage(name: '/menu-nav', page: () => MenuNav()),
-    GetPage(name: '/presensi', page: () => Presensi()),
     GetPage(name: '/history-presence', page: () => HistoryPresence()),
     GetPage(name: '/scanner', page: () => Scanner()),
     GetPage(name: '/help-center', page: () => HelpCenter()),
-    GetPage(name: '/permission', page: () => PermissionPage())
+    
   ];
 }

@@ -1,24 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:patrol_track_mobile/components/header.dart';
-import 'package:patrol_track_mobile/core/controllers/schedule_controller.dart';
-import 'package:patrol_track_mobile/core/models/schedule.dart';
 
 class SchedulePage extends StatefulWidget {
   const SchedulePage({Key? key}) : super(key: key);
 
   @override
-  _ScheduleState createState() => _ScheduleState();
+  _SchedulePageState createState() => _SchedulePageState();
 }
 
-class _ScheduleState extends State<SchedulePage> {
-  late Future<List<Schedule>> _futureSchedules;
+class _SchedulePageState extends State<SchedulePage> {
+  List<NotificationItem> notifications = [
+    NotificationItem(
+      message: 'Tanaman membutuhkan air.',
+      solution: 'Segera siram tanaman.',
+      icon: Icons.water_drop,
+      color: Colors.blue,
+      time: DateTime.now().subtract(Duration(minutes: 2)), // Waktu sekarang dikurangi 2 menit
+    ),
+    NotificationItem(
+      message: 'Suhu tanah terlalu tinggi.',
+      solution: 'Tutup tanaman dengan naungan atau siram dengan air.',
+      icon: Icons.thermostat,
+      color: Colors.red,
+      time: DateTime.now().subtract(Duration(minutes: 5)), // Waktu sekarang dikurangi 5 menit
+    ),
+    NotificationItem(
+      message: 'Suhu tanah terlalu tinggi.',
+      solution: 'Tutup tanaman dengan naungan atau siram dengan air.',
+      icon: Icons.thermostat,
+      color: Colors.red,
+      time: DateTime.now().subtract(Duration(minutes: 10)), // Waktu sekarang dikurangi 10 menit
+    ),
+    NotificationItem(
+      message: 'Tanaman membutuhkan air.',
+      solution: 'Segera siram tanaman.',
+      icon: Icons.water_drop,
+      color: Colors.blue,
+      time: DateTime.now().subtract(Duration(minutes: 15)), // Waktu sekarang dikurangi 15 menit
+    ),
+    NotificationItem(
+      message: 'Suhu tanah terlalu tinggi.',
+      solution: 'Tutup tanaman dengan naungan atau siram dengan air.',
+      icon: Icons.thermostat,
+      color: Colors.red,
+      time: DateTime.now().subtract(Duration(minutes: 30)), // Waktu sekarang dikurangi 30 menit
+    ),
+  ];
 
-  @override
-  void initState() {
-    super.initState();
-    _futureSchedules = ScheduleController.getSchedules(context);
+  void _removeNotification(int index) {
+    setState(() {
+      notifications.removeAt(index);
+    });
+  }
+
+  String _timeAgo(DateTime time) {
+    final difference = DateTime.now().difference(time);
+    if (difference.inSeconds < 60) {
+      return '${difference.inSeconds} detik yang lalu';
+    } else if (difference.inMinutes < 60) {
+      return '${difference.inMinutes} menit yang lalu';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} jam yang lalu';
+    } else {
+      return '${difference.inDays} hari yang lalu';
+    }
   }
 
   @override
@@ -26,39 +71,61 @@ class _ScheduleState extends State<SchedulePage> {
     return Scaffold(
       body: Column(
         children: [
-          const Header(title: "Jadwal"),
+          const Header(title: "Notifikasi"),
           Expanded(
-            child: FutureBuilder<List<Schedule>>(
-              future: _futureSchedules,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else {
-                  List<Schedule> schedules = snapshot.data!;
-                  if (schedules.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 16),
-                          Text('Schedule not yet available.',
-                            style: GoogleFonts.poppins(fontSize: 15),
-                          ),
-                        ],
+            child: ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return Container(
+                  margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 2,
+                        blurRadius: 5,
+                        offset: const Offset(0, 3), // changes position of shadow
                       ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      itemCount: schedules.length,
-                      itemBuilder: (context, index) {
-                        final schedule = schedules[index];
-                        return DaySchedule(schedule);
-                      },
-                    );
-                  }
-                }
+                    ],
+                  ),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: notifications[index].color.withOpacity(0.2),
+                      child: Icon(
+                        notifications[index].icon,
+                        color: notifications[index].color,
+                      ),
+                    ),
+                    title: Text(
+                      notifications[index].message,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          notifications[index].solution,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _timeAgo(notifications[index].time), // Menampilkan waktu yang telah berlalu
+                          style: const TextStyle(fontSize: 10, color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    trailing: IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () => _removeNotification(index),
+                    ),
+                  ),
+                );
               },
             ),
           ),
@@ -68,59 +135,18 @@ class _ScheduleState extends State<SchedulePage> {
   }
 }
 
-class DaySchedule extends StatelessWidget {
-  final Schedule schedule;
+class NotificationItem {
+  final String message;
+  final String solution;
+  final IconData icon;
+  final Color color;
+  final DateTime time; // Menambahkan waktu notifikasi
 
-  DaySchedule(this.schedule);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(5),
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: const Color(0xFF3085FE).withOpacity(0.1),
-                  ),
-                  child: const Icon(
-                    FontAwesomeIcons.calendarWeek,
-                    color: Color(0xFF305E8B),
-                  ),
-                ),
-                SizedBox(width: 20),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("${schedule.day}",
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text("${schedule.startTime} - ${schedule.endTime}",
-                      style: GoogleFonts.poppins(fontSize: 13),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  NotificationItem({
+    required this.message,
+    required this.solution,
+    required this.icon,
+    required this.color,
+    required this.time, // Tambahkan parameter waktu
+  });
 }

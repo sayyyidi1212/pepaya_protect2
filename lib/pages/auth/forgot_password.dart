@@ -19,6 +19,8 @@ class ForgotPass extends StatefulWidget {
 }
 
 class _ForgotPass extends State<ForgotPass> {
+  final TextEditingController emailController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,21 +44,15 @@ class _ForgotPass extends State<ForgotPass> {
               ),
               child: Column(
                 children: <Widget>[
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border(
-                        bottom: BorderSide(color: Colors.grey[200]!),
+                  TextField(
+                    controller: emailController,
+                    decoration: InputDecoration(
+                      labelText: "Email",
+                      labelStyle: GoogleFonts.poppins(
+                        color: Colors.grey,
+                        fontSize: 14,
                       ),
-                    ),
-                    child: TextField(
-                      decoration: InputDecoration(
-                        labelText: "Email",
-                        labelStyle: GoogleFonts.poppins(
-                          color: Colors.grey,
-                          fontSize: 14,
-                        ),
-                        border: InputBorder.none,
-                      ),
+                      border: InputBorder.none,
                     ),
                   ),
                 ],
@@ -65,7 +61,9 @@ class _ForgotPass extends State<ForgotPass> {
             SizedBox(height: 15),
             MyButton(
               text: "Send Code",
-              onPressed: () => Get.toNamed('/otp'),
+              onPressed: () {
+                // Tambahkan logika untuk mengirim kode jika diperlukan
+              },
             ),
             SizedBox(height: 20),
             Row(
@@ -73,10 +71,11 @@ class _ForgotPass extends State<ForgotPass> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () => Get.back(),
-                  child: Text("Back to Login",
+                  child: Text(
+                    "Back to Login",
                     style: GoogleFonts.poppins(
-                        color: Colors.grey, 
-                        fontWeight: FontWeight.w600
+                      color: Colors.grey, 
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:patrol_track_mobile/pages/report/report.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:image_picker/image_picker.dart'; // Import image_picker package
+import 'dart:io'; // Import dart:io to handle file operations
 
 class Scanner extends StatefulWidget {
   @override
@@ -12,6 +14,9 @@ class _ScannerState extends State<Scanner> {
   bool _frontCam = false;
   GlobalKey _qrKey = GlobalKey();
   QRViewController? _controller;
+  File? _imageFile; // To store the image file
+
+  final ImagePicker _picker = ImagePicker(); // Initialize ImagePicker
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +63,18 @@ class _ScannerState extends State<Scanner> {
                 IconButton(
                   onPressed: () async {
                     await _controller?.flipCamera();
-                    setState(() {});
+                    setState(() {
+                      _frontCam = !_frontCam;
+                    });
                   },
-                  icon:
-                      Icon(_frontCam ? Icons.camera_front : Icons.camera_rear),
+                  icon: Icon(_frontCam ? Icons.camera_front : Icons.camera_rear),
+                  color: Colors.white,
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await _pickImageFromCamera(); // Pick image from camera
+                  },
+                  icon: Icon(Icons.camera_alt),
                   color: Colors.white,
                 ),
                 IconButton(
@@ -75,6 +88,22 @@ class _ScannerState extends State<Scanner> {
         ],
       ),
     );
+  }
+
+  Future<void> _pickImageFromCamera() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path); // Set the file
+      });
+      // Navigate to a report page or handle the image file here
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => ReportPage(scanData: 'Image Captured', imageFile: _imageFile),
+        ),
+      );
+    }
   }
 
   void _onQRViewCreated(QRViewController controller) {

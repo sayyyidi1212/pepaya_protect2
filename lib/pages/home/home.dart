@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:patrol_track_mobile/components/history_card.dart';
-import 'package:patrol_track_mobile/core/controllers/attendance_controller.dart';
-import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
-import 'package:patrol_track_mobile/core/controllers/report_controller.dart';
-import 'package:patrol_track_mobile/core/models/attendance.dart';
-import 'package:patrol_track_mobile/core/models/user.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -16,208 +8,26 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DateTime today = DateTime.now();
-  late Future<User> _userFuture;
-  late Future<List<Attendance>> _attendanceFuture;
-  late Future<List<Attendance>> _todayAttendanceFuture;
-  late Future<bool> _todayReportFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _userFuture = AuthController.fetchUser(context);
-    _attendanceFuture = AttendanceController.getAttendanceHistory(context);
-    _todayAttendanceFuture = AttendanceController.getToday(context);
-    _todayReportFuture = ReportController.checkTodayReport(context);
-  }
-
-  String _formatTime(TimeOfDay time) {
-    final now = DateTime.now();
-    final dt = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    final format = DateFormat.Hm();
-    return format.format(dt);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
         children: [
-          FutureBuilder<User>(
-            future: _userFuture,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return _headerHome(snapshot.data!);
-              } else
-                return Container();
-            },
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Today",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Get.toNamed('/permission'),
-                      child: Text(
-                        "Apply for permission",
-                        style: GoogleFonts.poppins(
-                          color: Colors.red,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              FutureBuilder<List<Attendance>>(
-                future: _todayAttendanceFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    if (snapshot.data!.isEmpty) {
-                      return const SizedBox();
-                    } else {
-                      final start = snapshot.data![0].startTime;
-                      final end = snapshot.data![0].endTime;
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          twoCard("Check In", _formatTime(start), "Go to Work", FontAwesomeIcons.signIn),
-                          twoCard("Check Out", _formatTime(end), "Go to Work", FontAwesomeIcons.signOut)
-                        ],
-                      );
-                    }
-                  }
-                },
-              ),
-              FutureBuilder<bool>(
-                future: _todayReportFuture,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SizedBox();
-                  } else if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else {
-                    if (snapshot.data == false) {
-                      return _buildPatrolCard(
-                        title: 'You have not patrolled today.',
-                        icon: Icons.warning,
-                        color: Colors.red,
-                      );
-                    } else {
-                      return SizedBox();
-                    }
-                  }
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "History Presence",
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () => Get.toNamed('/history-presence'),
-                      child: Text(
-                        "See all",
-                        style: GoogleFonts.poppins(
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          FutureBuilder<List<Attendance>>(
-            future: _attendanceFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(
-                  child: Text('No history attendance data available.'),
-                );
-              } else {
-                List<Attendance> attendances = snapshot.data!;
-                List<Widget> cards = [];
-                int limit = 5;
-                int counter = 0;
-
-                for (var attendance in attendances) {
-                  if (counter >= limit) {
-                    break;
-                  }
-                  if (attendance.checkIn != null) {
-                    cards.add(
-                      MyCard(
-                        icon: IconType.CheckIn,
-                        title: "Check In",
-                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
-                        time: _formatTime(attendance.checkIn!),
-                        status: attendance.status ?? '',
-                      ),
-                    );
-                    counter++;
-                  }
-                  if (attendance.checkOut != null && counter < limit) {
-                    cards.add(
-                      MyCard(
-                        icon: IconType.CheckOut,
-                        title: "Check Out",
-                        subtitle: DateFormat('dd-MM-yyyy').format(attendance.date),
-                        time: _formatTime(attendance.checkOut!),
-                        status: attendance.status ?? '',
-                      ),
-                    );
-                    counter++;
-                  }
-                }
-
-                return Expanded(
-                  child: ListView(
-                    children: cards,
-                  ),
-                );
-              }
-            },
-          ),
+          _headerHome(),
+          const SizedBox(height: 20), // Menambahkan jarak di antara header dan section deteksi penyakit
+          _diseaseDetectionSection(),
+          const SizedBox(height: 20), // Menambahkan jarak di bawah section deteksi penyakit
+          _temperatureHumidityIndicator(), // Menambahkan indikator suhu dan kelembapan
         ],
       ),
     );
   }
 
-  Widget _headerHome(User user) {
+  Widget _headerHome() {
     return Container(
       padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 5),
       decoration: const BoxDecoration(
-        color: Color(0xFF356899),
+       color: Color.fromARGB(255, 155, 241, 174),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),
@@ -245,8 +55,7 @@ class _HomeState extends State<Home> {
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 3, bottom: 25),
-                  child: Text('${user.name}',
-                    // child: Text('Fanidiya Tasya',
+                  child: Text('User Name',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.w600,
@@ -276,98 +85,151 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget twoCard(String title, String time, String subtitle, IconData icon) {
-    return GestureDetector(
-      onTap: () => Get.toNamed('/presensi'),
-      child: Container(
-        width: 165,
-        height: 134,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
-              spreadRadius: 2,
-              blurRadius: 5,
-            ),
-          ],
+  Widget _diseaseDetectionSection() {
+  return Container(
+    padding: const EdgeInsets.all(15.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Deteksi Penyakit Buah Pepaya',
+          style: GoogleFonts.poppins(
+            fontSize: 20,
+            fontWeight: FontWeight.w700, // Menggunakan berat huruf yang lebih tebal
+            color: Colors.green.shade800, // Mengubah warna teks
+          ),
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              top: 20,
-              left: 20,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          color: const Color(0xFF3085FE).withOpacity(0.1),
-                        ),
-                        child: Icon(icon),
-                      ),
-                      SizedBox(width: 5),
-                      Text(
-                        title,
-                        style: GoogleFonts.poppins(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 5),
-                  Text(
-                    time,
-                    style: GoogleFonts.poppins(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    subtitle,
-                    style: GoogleFonts.poppins(fontSize: 12),
-                  ),
-                ],
+        const SizedBox(height: 10),
+        Text(
+          'Ikuti langkah-langkah berikut untuk mendeteksi penyakit:',
+          style: GoogleFonts.poppins(fontSize: 14, color: Colors.black54), // Mengubah warna teks
+        ),
+        const SizedBox(height: 10),
+        _stepsSection(),
+        const SizedBox(height: 20), // Menambahkan jarak lebih untuk tombol
+        Center( // Menambahkan Center di sini
+          child: ElevatedButton.icon(
+            onPressed: () {
+              // Tambahkan fungsi untuk mengunggah gambar dan memulai deteksi penyakit
+            },
+            icon: const Icon(Icons.upload_file), // Menambahkan ikon ke tombol
+            label: const Text('Unggah Gambar'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green[700], // Mengubah warna tombol
+              foregroundColor: Colors.white, // Mengubah warna teks tombol
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15), // Mengubah padding
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(60), // Membuat tombol lebih melengkung
               ),
             ),
-          ],
+          ),
         ),
-      ),
+      ],
+    ),
+  );
+}
+
+
+  Widget _stepsSection() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        _stepImage('assets/images/profile.jpeg', 'Ambil Gambar'), // Ganti dengan path gambar Anda
+        _arrowIcon(),
+        _stepImage('assets/images/profile.jpeg', 'Unggah Gambar'), // Ganti dengan path gambar Anda
+        _arrowIcon(),
+        _stepImage('assets/images/profile.jpeg', 'Lihat Hasil'), // Ganti dengan path gambar Anda
+      ],
     );
   }
 
-  Widget _buildPatrolCard(
-      {String title = '',
-      IconData icon = Icons.error,
-      Color color = Colors.black}) {
-    return Card(
-      margin: const EdgeInsets.all(20),
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
+  Widget _stepImage(String imagePath, String label) {
+    return Column(
+      children: [
+        Image.asset(
+          imagePath,
+          width: 60, // Sesuaikan ukuran gambar
+          height: 60,
         ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              color: color,
-              size: 30,
-            ),
-            SizedBox(width: 10),
-            Text(
-              title,
-              style: GoogleFonts.poppins(fontSize: 15),
-            ),
-          ],
+        const SizedBox(height: 5),
+        Text(
+          label,
+          style: GoogleFonts.poppins(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+          textAlign: TextAlign.center,
         ),
-      ),
+      ],
     );
   }
+
+  Widget _arrowIcon() {
+    return Icon(
+      FontAwesomeIcons.arrowRight,
+      size: 30,
+      color: Colors.grey,
+    );
+  }
+
+  Widget _temperatureHumidityIndicator() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        _indicatorCard('Suhu', '30°C', Colors.orange), // Ganti dengan nilai aktual
+        _indicatorCard('Kelembapan', '75%', Colors.blue), // Ganti dengan nilai aktual
+      ],
+    );
+  }
+
+  Widget _indicatorCard(String title, String value, Color color) {
+  IconData? weatherIcon; // Variabel untuk menyimpan ikon cuaca
+
+  // Menentukan ikon berdasarkan judul
+  if (title == 'Cuaca') {
+    weatherIcon = FontAwesomeIcons.sun; // Ikon untuk cuaca cerah
+  } else if (title == 'Suhu') {
+    weatherIcon = FontAwesomeIcons.thermometerHalf; // Ikon untuk suhu
+  } else if (title == 'Kelembapan') {
+    weatherIcon = FontAwesomeIcons.cloudRain; // Ikon untuk kelembapan
+  }
+
+  return Card(
+    elevation: 3,
+    child: Container(
+      padding: const EdgeInsets.all(15),
+      width: 120, // Sesuaikan lebar kartu
+      child: Column(
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.poppins(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 5),
+          Text(
+            value,
+            style: GoogleFonts.poppins(
+              fontSize: 24,
+              fontWeight: FontWeight.w700,
+              color: Colors.black,
+            ),
+          ),
+          const SizedBox(height: 5),
+          // Menambahkan ikon cuaca
+          if (weatherIcon != null)
+            Icon(
+              weatherIcon,
+              size: 30,
+              color: color,
+            ),
+        ],
+      ),
+    ),
+  );
+}
+
 }

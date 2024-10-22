@@ -14,7 +14,7 @@ class Header extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.only(top: 40, left: 15, right: 15, bottom: 10),
       decoration: const BoxDecoration(
-        color: Color(0xFF356899),
+        color: Color.fromARGB(255, 155, 241, 174),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(30),
           bottomRight: Radius.circular(30),

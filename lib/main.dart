@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:patrol_track_mobile/pages/splash_screen.dart';
 import 'package:patrol_track_mobile/routes/route_app.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:patrol_track_mobile/pages/menu_nav.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   initializeDateFormatting("id_ID", null);
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home:SplashScreen(),
+      home:MenuNav(),
       defaultTransition: Transition.rightToLeft,
       getPages: RouteApp.pages,
     );

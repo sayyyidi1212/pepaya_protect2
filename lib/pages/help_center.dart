@@ -11,7 +11,6 @@ class _HelpCenterState extends State<HelpCenter> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
-        
         children: [
           const Header(title: "Help Center", backButton: true),
         ],

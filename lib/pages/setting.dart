@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:patrol_track_mobile/components/button.dart';
 import 'package:patrol_track_mobile/components/header.dart';
-import 'package:patrol_track_mobile/core/controllers/auth_controller.dart';
-import 'package:patrol_track_mobile/core/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Setting extends StatelessWidget {
-  
+  // Contoh data pengguna lokal
+  final User user = User(
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    birthDate: '1990-01-01',
+    address: '123 Main St, City',
+    phoneNumber: '08123456789',
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,20 +21,7 @@ class Setting extends StatelessWidget {
           const Header(title: "Profile"),
           const SizedBox(height: 20),
           Expanded(
-            child: FutureBuilder<User>(
-              future: AuthController.fetchUser(context),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  if (snapshot.hasData) {
-                    return _buildSetting(context, snapshot.data!);
-                  } else if (snapshot.hasError) {
-                    debugPrint('Error: ${snapshot.error}');
-                    return Center(child: Text('Failed to load user data'));
-                  }
-                }
-                return Center(child: CircularProgressIndicator());
-              },
-            ),
+            child: _buildSetting(context, user),
           ),
         ],
       ),
@@ -89,8 +81,9 @@ class Setting extends StatelessWidget {
                             child: Text("Tidak"),
                           ),
                           TextButton(
-                            onPressed: () async {
-                              await AuthController.logout(context, await SharedPreferences.getInstance());
+                            onPressed: () {
+                              // Logout logic goes here
+                              Navigator.of(context).pop(); // Close the dialog
                             },
                             child: Text("Ya"),
                           ),
@@ -142,4 +135,20 @@ class Setting extends StatelessWidget {
       ),
     );
   }
+}
+
+class User {
+  final String name;
+  final String email;
+  final String birthDate;
+  final String address;
+  final String phoneNumber;
+
+  User({
+    required this.name,
+    required this.email,
+    required this.birthDate,
+    required this.address,
+    required this.phoneNumber,
+  });
 }
